@@ -27,6 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
     namespace "com.mycompany.admin"
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -54,6 +55,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        targetSdkVersion rootProject.ext.targetSdkVersion
     }
 
     buildTypes {
@@ -70,6 +72,7 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

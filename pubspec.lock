@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.6"
-  animated_splash_screen:
-    dependency: "direct main"
-    description:
-      name: animated_splash_screen
-      sha256: f45634db6ec4e8cf034c53e03f3bd83898a16fe3c9286bf5510b6831dfcf2124
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   archive:
     dependency: transitive
     description:
@@ -49,6 +41,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  background_fetch:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: f98c48e4905d6e1263ec73ca9b7fddfc537f4f75
+      url: "https://github.com/transistorsoft/flutter_background_fetch"
+    source: git
+    version: "1.2.2"
   bloc:
     dependency: "direct main"
     description:
@@ -201,14 +202,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: e35129dc44c9118cee2a5603506d823bab99c68393879edb440e0090d07586be
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   device_info_plus:
     dependency: transitive
     description:
@@ -325,26 +318,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_messaging
-      sha256: "8ac91d83a028eef050de770f1dc98421e215714d245f34de7b154d436676fbd0"
+      sha256: "4544524c22de3ffdc7e0ffaeeba212a04d09e76d0549ae6f42ce285d9d8f0513"
       url: "https://pub.dev"
     source: hosted
-    version: "14.6.5"
+    version: "14.6.8"
   firebase_messaging_platform_interface:
     dependency: transitive
     description:
       name: firebase_messaging_platform_interface
-      sha256: b2995e3640efb646e9ebf0e2fa50dea84895f0746a31d7e3af0e5e009a533a1a
+      sha256: a6e1fae8242a14d5d8f5ab1cf94693511f06bab49ff1d46e3d83c0af3c4becb8
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.4"
+    version: "4.5.7"
   firebase_messaging_web:
     dependency: transitive
     description:
       name: firebase_messaging_web
-      sha256: "5d8446a28339124a2cb4f57a6ca454a3aca7d0c5c0cdfa5707afb192f7c830a7"
+      sha256: a9fe837dc2dcdd3e32e6109a6b0ce62592d7a44cb8f69cb5b73190865c5aa28e
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.4"
+    version: "3.5.7"
   firebase_remote_config:
     dependency: "direct main"
     description:
@@ -645,14 +638,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  mobile_scanner:
-    dependency: "direct main"
-    description:
-      name: mobile_scanner
-      sha256: "54dd914e1bb5758b3db7aa02e56d65d80285ba0705e0e5fa5cfbb11e27344c4b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.0"
   multiselect:
     dependency: "direct main"
     description:
@@ -701,14 +686,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  page_transition:
-    dependency: transitive
-    description:
-      name: page_transition
-      sha256: dee976b1f23de9bbef5cd512fe567e9f6278caee11f5eaca9a2115c19dc49ef6
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   path:
     dependency: transitive
     description:
@@ -861,22 +838,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.5"
-  qr:
-    dependency: transitive
-    description:
-      name: qr
-      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
-  qr_flutter:
-    dependency: "direct main"
-    description:
-      name: qr_flutter
-      sha256: "5095f0fc6e3f71d08adef8feccc8cea4f12eec18a2e31c2e8d82cb6019f4b097"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.0"
   quiver:
     dependency: transitive
     description:
@@ -885,14 +846,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
-  rename_app:
-    dependency: "direct main"
-    description:
-      name: rename_app
-      sha256: "598d33d1a89c7f47e57b6f37edb9661667238e49a9a81cf4e60a8cf444a3f9fc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.1"
   rfc_6901:
     dependency: transitive
     description:
@@ -902,7 +855,7 @@ packages:
     source: hosted
     version: "0.1.1"
   shared_preferences:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences
       sha256: "396f85b8afc6865182610c0a2fc470853d56499f75f7499e2a73a9f0539d23d0"
@@ -910,7 +863,7 @@ packages:
     source: hosted
     version: "2.1.2"
   shared_preferences_android:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences_android
       sha256: "6478c6bbbecfe9aced34c483171e90d7c078f5883558b30ec3163cf18402c749"
@@ -934,7 +887,7 @@ packages:
     source: hosted
     version: "2.2.0"
   shared_preferences_platform_interface:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences_platform_interface
       sha256: fb5cf25c0235df2d0640ac1b1174f6466bd311f621574997ac59018a6664548d
@@ -957,14 +910,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  shimmer:
-    dependency: "direct main"
-    description:
-      name: shimmer
-      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -986,22 +931,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  sqflite:
-    dependency: "direct main"
-    description:
-      name: sqflite
-      sha256: "591f1602816e9c31377d5f008c2d9ef7b8aca8941c3f89cc5fd9d84da0c38a9a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
-  sqflite_common:
-    dependency: transitive
-    description:
-      name: sqflite_common
-      sha256: "1b92f368f44b0dee2425bb861cfa17b6f6cf3961f762ff6f941d20b33355660a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1034,14 +963,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      sha256: "5fcbd27688af6082f5abd611af56ee575342c30e87541d0245f7ff99faa02c60"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   term_glyph:
     dependency: transitive
     description:
@@ -1202,6 +1123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  workmanager:
+    dependency: "direct main"
+    description:
+      name: workmanager
+      sha256: e0be7e35d644643f164ee45d2ce14414f0e0fdde19456aa66065f35a0b1d2ea1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   xdg_directories:
     dependency: transitive
     description:
