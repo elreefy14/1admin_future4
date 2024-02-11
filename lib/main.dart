@@ -3,6 +3,8 @@ import 'dart:isolate';
 import 'package:admin_future/add_grouup_of_schedules/presentation/onboarding_screen.dart';
 import 'package:admin_future/home/business_logic/Home/manage_attendence_cubit%20.dart';
 import 'package:admin_future/manage_users_coaches/business_logic/manage_users_cubit.dart';
+import 'package:admin_future/registeration/presenation/widget/fetch_functions.dart';
+import 'package:admin_future/registeration/presenation/widget/work_manager.dart';
 import 'package:admin_future/routiong.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -93,18 +95,19 @@ Future<void> main() async {
   //use android sett up to make the app work in the background
   FirebaseFirestore.instance.enableNetwork();
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-BackgroundFetch.scheduleTask(
-    TaskConfig
-      (
-      taskId: "com.transistorsoft.customtask",
-      delay: 30000,
-      periodic: true,
-      forceAlarmManager: true,
-      stopOnTerminate: false,
-      enableHeadless: true,
-      startOnBoot: true,
-    ),
-  );
+  scheduleTask();
+// BackgroundFetch.scheduleTask(
+//     TaskConfig
+//       (
+//       taskId: "com.transistorsoft.customtask",
+//       delay: 30000,
+//       periodic: true,
+//       forceAlarmManager: true,
+//       stopOnTerminate: false,
+//       enableHeadless: true,
+//       startOnBoot: true,
+//     ),
+//   );
   BackgroundFetch.configure(
     BackgroundFetchConfig(
       minimumFetchInterval: 1, // Set the interval for the task in minutes
@@ -132,18 +135,20 @@ BackgroundFetch.scheduleTask(
     },
   );
  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  BackgroundFetch.scheduleTask(
-    TaskConfig
-      (
-      taskId: "com.transistorsoft.customtask",
-      delay: 30000,
-      periodic: true,
-      forceAlarmManager: true,
-      stopOnTerminate: false,
-      enableHeadless: true,
-      startOnBoot: true,
-    ),
-  );
+ scheduleTask();
+  // BackgroundFetch.scheduleTask(
+  //   TaskConfig
+  //     (
+  //     taskId: "com.transistorsoft.customtask",
+  //     delay: 30000,
+  //     periodic: true,
+  //     forceAlarmManager: true,
+  //     stopOnTerminate: false,
+  //     enableHeadless: true,
+  //     startOnBoot: true,
+  //
+  //   ),
+  // );
 //  await AndroidAlarmManager.initialize();
 
      Workmanager().initialize(
@@ -195,86 +200,97 @@ BackgroundFetch.scheduleTask(
   BlocOverrides.runZoned(() => runApp(const MyApp()),
       blocObserver: MyBlocObserver());
    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  BackgroundFetch.scheduleTask(
-    TaskConfig
-      (
-      taskId: "com.transistorsoft.customtask",
-      delay: 30000,
-      periodic: true,
-      forceAlarmManager: true,
-      stopOnTerminate: false,
-      enableHeadless: true,
-    ),
+   scheduleTask();
+  // BackgroundFetch.scheduleTask(
+  //   TaskConfig
+  //     (
+  //     taskId: "com.transistorsoft.customtask",
+  //     delay: 30000,
+  //     periodic: true,
+  //     forceAlarmManager: true,
+  //     stopOnTerminate: false,
+  //     enableHeadless: true,
+  //   ),
+  // );
+  registerPeriodicTask(
+    uniqueName: '2',
+        taskName: '3',
   );
-
-        Workmanager().registerPeriodicTask(
-//call dummy function to make the app work in the background
-    '2',
-    '3',
-    //8 hours
-     frequency: const Duration(seconds: 30 ),
-    //25 seconds
-    initialDelay: const Duration(seconds:35),
-    // constraints: Constraints(
-    //networkType: NetworkType.connected,
-    //  ),
+//         Workmanager().registerPeriodicTask(
+// //call dummy function to make the app work in the background
+//     '2',
+//     '3',
+//     //8 hours
+//      frequency: const Duration(seconds: 30 ),
+//     //25 seconds
+//     initialDelay: const Duration(seconds:35),
+//     // constraints: Constraints(
+//     //networkType: NetworkType.connected,
+//     //  ),
+//   );
+  registerPeriodicTask(
+    uniqueName: '3',
+    taskName: '4',
   );
-  Workmanager().registerPeriodicTask(
-//call dummy function to make the app work in the background
-    '3',
-    '4',
-    //8 hours
-    frequency: const Duration(seconds: 30 ),
-    //25 seconds
-    initialDelay: const Duration(seconds:20),
-    // constraints: Constraints(
-    //networkType: NetworkType.connected,
-    //  ),
-  );
-  Workmanager().registerOneOffTask(
-//call dummy function to make the app work in the background
-    '4',
-    '5',
-    //8 hours
-    //frequency: const Duration(seconds: 30),
-    //25 seconds
-    initialDelay: const Duration(seconds:30),
-    // constraints: Constraints(
-    //networkType: NetworkType.connected,
-    //  ),
-  );
-  Workmanager().registerPeriodicTask(
-//call dummy function to make the app work in the background
-    '5',
-    '6',
-    //8 hours
-    //frequency: const Duration(seconds: 30),
-    //25 seconds
-    frequency: const Duration(seconds:30),
-    backoffPolicy: BackoffPolicy.linear,
-   // existingWorkPolicy: ExistingWorkPolicy.replace,
-    tag: 'tag',
-    // constraints: Constraints(
-    //networkType: NetworkType.connected,
-    //  ),
-  );
-  Workmanager().registerPeriodicTask(
-//call dummy function to make the app work in the background
-    '5',
-    '6',
-    //8 hours
-    //frequency: const Duration(seconds: 30),
-    //25 seconds
-    outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
-    frequency: const Duration(seconds:30),
-
-    backoffPolicy: BackoffPolicy.linear,
-    existingWorkPolicy: ExistingWorkPolicy.replace,
-    tag: 'tag',
-    // constraints: Constraints(
-    //networkType: NetworkType.connected,
-    //  ),
-  );
+//   Workmanager().registerPeriodicTask(
+// //call dummy function to make the app work in the background
+//     '3',
+//     '4',
+//     //8 hours
+//     frequency: const Duration(seconds: 30 ),
+//     //25 seconds
+//     initialDelay: const Duration(seconds:20),
+//     // constraints: Constraints(
+//     //networkType: NetworkType.connected,
+//     //  ),
+//   );
+  registerOneOffTask();
+//   Workmanager().registerOneOffTask(
+// //call dummy function to make the app work in the background
+//     '4',
+//     '5',
+//     //8 hours
+//     //frequency: const Duration(seconds: 30),
+//     //25 seconds
+//     initialDelay: const Duration(seconds:30),
+//     // constraints: Constraints(
+//     //networkType: NetworkType.connected,
+//     //  ),
+//   );
+  registerPeriodicTask2();
+//   Workmanager().registerPeriodicTask(
+// //call dummy function to make the app work in the background
+//     '5',
+//     '6',
+//     //8 hours
+//     //frequency: const Duration(seconds: 30),
+//     //25 seconds
+//     frequency: const Duration(seconds:30),
+//     backoffPolicy: BackoffPolicy.linear,
+//    // existingWorkPolicy: ExistingWorkPolicy.replace,
+//     tag: 'tag',
+//     // constraints: Constraints(
+//     //networkType: NetworkType.connected,
+//     //  ),
+//   );
+  registerPeriodicTask3();
+//   Workmanager().registerPeriodicTask(
+// //call dummy function to make the app work in the background
+//     '5',
+//     '6',
+//     //8 hours
+//     //frequency: const Duration(seconds: 30),
+//     //25 seconds
+//     outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
+//     frequency: const Duration(seconds:30),
+//
+//     backoffPolicy: BackoffPolicy.linear,
+//     existingWorkPolicy: ExistingWorkPolicy.replace,
+//     tag: 'tag',
+//     // constraints: Constraints(
+//     //networkType: NetworkType.connected,
+//     //  ),
+//   );
 
 }
 

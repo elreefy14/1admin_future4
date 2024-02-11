@@ -8,6 +8,7 @@ import 'package:admin_future/registeration/presenation/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:workmanager/workmanager.dart';
 import 'Notification/presentation/notification_screen.dart';
 import 'add_grouup_of_schedules/presentation/onboarding_screen.dart';
 import 'core/constants/routes_manager.dart';
@@ -297,6 +298,3 @@ surfaceTintColor: Colors.white,
     );
   }
 }
-
-
-
