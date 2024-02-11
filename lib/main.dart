@@ -18,11 +18,7 @@ import 'package:workmanager/workmanager.dart';
 import 'core/bloc_observer.dart';
 import 'core/constants/routes_manager.dart';
 
-//todo if notificaiton is not working
-// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   print('Handling a background message:\n\n\n ${message.messageId}');
-// }
-
+//todo: if phone is huwawi call that function
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -35,30 +31,33 @@ void callbackDispatcher() {
     );
     //use android sett up to make the app work in the background
     FirebaseFirestore.instance.enableNetwork();
-    FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
+   // FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
+   // FirebaseFirestore.instance.collection('dummy').doc('dummy4').set({'count': 1});
+    FirebaseFirestore.instance.collection('dummy').doc('dummy4').update({'count': FieldValue.increment(1)});
     print("work manager mbroooooooook Native called background task: \n\n\n\n\n\n\n"
         "work manager "
         ); //simpleTsk will be emitted here.
     return Future.value(true);
   });
 }
-// @pragma('vm:entry-point')
-// void backgroundFetchHeadlessTask(HeadlessTask task) async {
-// final taskId = task.taskId;
-// await Firebase.initializeApp(
-// );
-// FirebaseFirestore.instance.settings =
-// const Settings(
-//   persistenceEnabled: true,
-//   cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-// );
-// //use android sett up to make the app work in the background
-// FirebaseFirestore.instance.enableNetwork();
-// FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'Fetch'});
-// print("backgroundFetch mbroooooooook Native called background task: \n\n\n\n\n\n\nbackgroundFetch"); //simpleTask will be emitted here.
-//   // Do your work here...
-//   BackgroundFetch.finish(taskId);
-// }
+@pragma('vm:entry-point')
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+final taskId = task.taskId;
+await Firebase.initializeApp(
+);
+FirebaseFirestore.instance.settings =
+const Settings(
+  persistenceEnabled: true,
+  cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+);
+//use android sett up to make the app work in the background
+FirebaseFirestore.instance.enableNetwork();
+//FirebaseFirestore.instance.collection('dummy').doc('dummy5').set({'fetch': 1});
+FirebaseFirestore.instance.collection('dummy').doc('dummy5').update({'fetch': FieldValue.increment(1)});
+print("backgroundFetch mbroooooooook Native called background task: \n\n\n\n\n\n\nbackgroundFetch"); //simpleTask will be emitted here.
+  // Do your work here...
+  BackgroundFetch.finish(taskId);
+}
 
 late String mainRoute;
 //final remoteConfig = //firabase remote config
@@ -85,8 +84,7 @@ Future<void> main() async {
   // use future builder to wait for firebase to be initialized and cache to be initialized
   // await CacheHelper.init();
   //
-  await Firebase.initializeApp(
-  );
+  await Firebase.initializeApp();
   FirebaseFirestore.instance.settings =
   const Settings(
     persistenceEnabled: true,
@@ -94,49 +92,63 @@ Future<void> main() async {
   );
   //use android sett up to make the app work in the background
   FirebaseFirestore.instance.enableNetwork();
-  // await BackgroundFetch.configure(
-  //   BackgroundFetchConfig(
-  //     minimumFetchInterval: 1, // Set the interval for the task in minutes
-  //     stopOnTerminate: false, // Continue running the task even if the app is closed
-  //     enableHeadless: true, // Enable handling of tasks in the background isolate
-  //     requiresBatteryNotLow: false, // Allow running the task even if the battery is low
-  //     requiresCharging: false,
-  //     forceAlarmManager: true,
-  //   //give all permissions to the app
-  //     startOnBoot: true, // Run the task once the device is powered on
-  //   ),    (String taskId) async {
-  //     // This callback is called when the app is in the background and a task is triggered.
-  //         await Firebase.initializeApp(
-  //   );
-  //   FirebaseFirestore.instance.settings =
-  //   const Settings(
-  //     persistenceEnabled: true,
-  //     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-  //   );
-  //   //use android sett up to make the app work in the background
-  //   FirebaseFirestore.instance.enableNetwork();
-  //   FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'fetch 2'});
-  //   print("fetchhhhhhhhhh mbroooooooook Native called background task: \n\n\n\n\n\n\n backgroundFetch"); //simpleTask will be emitted here.
-  //   },
-  // );
- // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
- //  BackgroundFetch.scheduleTask(
- //    TaskConfig
- //      (
- //      taskId: "com.transistorsoft.customtask",
- //      delay: 30000,
- //      periodic: true,
- //      forceAlarmManager: true,
- //      stopOnTerminate: false,
- //      enableHeadless: true,
- //    ),
- //  );
-  //await AndroidAlarmManager.initialize();
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+BackgroundFetch.scheduleTask(
+    TaskConfig
+      (
+      taskId: "com.transistorsoft.customtask",
+      delay: 30000,
+      periodic: true,
+      forceAlarmManager: true,
+      stopOnTerminate: false,
+      enableHeadless: true,
+      startOnBoot: true,
+    ),
+  );
+  BackgroundFetch.configure(
+    BackgroundFetchConfig(
+      minimumFetchInterval: 1, // Set the interval for the task in minutes
+      stopOnTerminate: false, // Continue running the task even if the app is closed
+      enableHeadless: true, // Enable handling of tasks in the background isolate
+      requiresBatteryNotLow: false, // Allow running the task even if the battery is low
+      requiresCharging: false,
+      forceAlarmManager: true,
+    //give all permissions to the app
+      startOnBoot: true, // Run the task once the device is powered on
+    ),    (String taskId) async {
+      // This callback is called when the app is in the background and a task is triggered.
+          await Firebase.initializeApp(
+    );
+    FirebaseFirestore.instance.settings =
+    const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    //use android sett up to make the app work in the background
+    FirebaseFirestore.instance.enableNetwork();
+    //FirebaseFirestore.instance.collection('dummy').doc('dummy3').set({'fetch': 1});
+    FirebaseFirestore.instance.collection('dummy').doc('dummy3').update({'fetch': FieldValue.increment(1)});
+    print("dummy3 fetchhhhhhhhhh mbroooooooook Native called background task: \n\n\n\n\n\n\n backgroundFetch"); //simpleTask will be emitted here.
+    },
+  );
+ BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  BackgroundFetch.scheduleTask(
+    TaskConfig
+      (
+      taskId: "com.transistorsoft.customtask",
+      delay: 30000,
+      periodic: true,
+      forceAlarmManager: true,
+      stopOnTerminate: false,
+      enableHeadless: true,
+      startOnBoot: true,
+    ),
+  );
+//  await AndroidAlarmManager.initialize();
 
      Workmanager().initialize(
          callbackDispatcher,
           isInDebugMode: kDebugMode,
-
      );
 
 
@@ -182,31 +194,91 @@ Future<void> main() async {
 
   BlocOverrides.runZoned(() => runApp(const MyApp()),
       blocObserver: MyBlocObserver());
-  // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  // BackgroundFetch.scheduleTask(
-  //   TaskConfig
-  //     (
-  //     taskId: "com.transistorsoft.customtask",
-  //     delay: 30000,
-  //     periodic: true,
-  //     forceAlarmManager: true,
-  //     stopOnTerminate: false,
-  //     enableHeadless: true,
-  //   ),
-  // );
+   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  BackgroundFetch.scheduleTask(
+    TaskConfig
+      (
+      taskId: "com.transistorsoft.customtask",
+      delay: 30000,
+      periodic: true,
+      forceAlarmManager: true,
+      stopOnTerminate: false,
+      enableHeadless: true,
+    ),
+  );
 
         Workmanager().registerPeriodicTask(
 //call dummy function to make the app work in the background
-    '1',
     '2',
+    '3',
     //8 hours
      frequency: const Duration(seconds: 30 ),
     //25 seconds
-    initialDelay: const Duration(seconds:0),
+    initialDelay: const Duration(seconds:35),
     // constraints: Constraints(
     //networkType: NetworkType.connected,
     //  ),
   );
+  Workmanager().registerPeriodicTask(
+//call dummy function to make the app work in the background
+    '3',
+    '4',
+    //8 hours
+    frequency: const Duration(seconds: 30 ),
+    //25 seconds
+    initialDelay: const Duration(seconds:20),
+    // constraints: Constraints(
+    //networkType: NetworkType.connected,
+    //  ),
+  );
+  Workmanager().registerOneOffTask(
+//call dummy function to make the app work in the background
+    '4',
+    '5',
+    //8 hours
+    //frequency: const Duration(seconds: 30),
+    //25 seconds
+    initialDelay: const Duration(seconds:30),
+    // constraints: Constraints(
+    //networkType: NetworkType.connected,
+    //  ),
+  );
+  Workmanager().registerPeriodicTask(
+//call dummy function to make the app work in the background
+    '5',
+    '6',
+    //8 hours
+    //frequency: const Duration(seconds: 30),
+    //25 seconds
+    frequency: const Duration(seconds:30),
+    backoffPolicy: BackoffPolicy.linear,
+   // existingWorkPolicy: ExistingWorkPolicy.replace,
+    tag: 'tag',
+    // constraints: Constraints(
+    //networkType: NetworkType.connected,
+    //  ),
+  );
+  Workmanager().registerPeriodicTask(
+//call dummy function to make the app work in the background
+    '5',
+    '6',
+    //8 hours
+    //frequency: const Duration(seconds: 30),
+    //25 seconds
+    outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
+    frequency: const Duration(seconds:30),
+    constraints: Constraints(
+      networkType: NetworkType.connected,
+      requiresBatteryNotLow: true,
+    ),
+    backoffPolicy: BackoffPolicy.linear,
+    existingWorkPolicy: ExistingWorkPolicy.replace,
+    tag: 'tag',
+    // constraints: Constraints(
+    //networkType: NetworkType.connected,
+    //  ),
+  );
+
 }
 
 
