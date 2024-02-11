@@ -267,10 +267,7 @@ BackgroundFetch.scheduleTask(
     //25 seconds
     outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
     frequency: const Duration(seconds:30),
-    constraints: Constraints(
-      networkType: NetworkType.connected,
-      requiresBatteryNotLow: true,
-    ),
+
     backoffPolicy: BackoffPolicy.linear,
     existingWorkPolicy: ExistingWorkPolicy.replace,
     tag: 'tag',
