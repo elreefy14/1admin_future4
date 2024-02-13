@@ -290,7 +290,7 @@ class ShowCoachesInDialog extends StatelessWidget {
               Expanded(
                 child: FirestoreListView(
                   shrinkWrap: true,
-                  cacheExtent: 500,
+                  cacheExtent: 5000,
                   pageSize: 5,
                   query: query ??FirebaseFirestore.instance.collection('users').where(
                       'role', isEqualTo: isCoachInfoList??false ? 'coach' : 'user')
@@ -1224,7 +1224,7 @@ class ShowCoachesInDialog extends StatelessWidget {
               Expanded(
                 child: FirestoreListView(
                   shrinkWrap: true,
-                  cacheExtent: 500,
+                  cacheExtent: 5000,
                   pageSize: 8,
                   query: query ??FirebaseFirestore.instance.collection('users').where(
                       'role', isEqualTo: isCoachInfoList??false ? 'coach' : 'user')
@@ -2802,7 +2802,7 @@ class ShowCoachesInDialog extends StatelessWidget {
                 Expanded(
                   child: FirestoreListView(
                     shrinkWrap: true,
-                    cacheExtent: 500,
+                    cacheExtent: 5000,
                     pageSize: 5,
                     query: query ??FirebaseFirestore.instance.collection('users').where(
                         'role', isEqualTo: isCoachInfoList??false ? 'coach' : 'user')

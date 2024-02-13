@@ -353,13 +353,13 @@ class AddCoachScreen extends StatelessWidget {
                                       }
                                       else {
                                         //signUp
-                                        SignUpCubit.get(context).addUser(
-                                          role: 'user',
-                                          fName: SignUpCubit
+                                        SignUpCubit.get(context).addTrainee(
+                                          //role: 'user',
+                                          fname: SignUpCubit
                                               .get(context)
                                               .firstNameController
                                               .text,
-                                          lName: SignUpCubit
+                                          lname: SignUpCubit
                                               .get(context)
                                               .lastNameController
                                               .text,

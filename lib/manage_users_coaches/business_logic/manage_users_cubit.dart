@@ -1198,7 +1198,17 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
         batch.update(dateDocumentRef, {
           'totalSalary': FieldValue.increment(int.parse(userTotalSalary.toString())),
         });
-
+    batch.set(
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('notifications')
+          .doc(),
+      {
+        'message': 'تم صرف المرتب كامل للمستخدم ${user.name} ',
+        'timestamp': DateTime.now(),
+      },
+    );
         DocumentReference userDocumentRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
@@ -1577,6 +1587,17 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
         'message': 'تم صرف المرتب للمستخدم ${user.name} بمبلغ ${salaryPaid} جنيه',
         'timestamp': DateTime.now(),
       }, SetOptions(merge: true));
+      batch.set(
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('notifications')
+            .doc(),
+        {
+          'message': 'تم صرف المرتب للمستخدم ${user.name} بمبلغ ${salaryPaid} جنيه',
+          'timestamp': DateTime.now(),
+        },
+      );
          batch.commit();
         showRollbackButton = true;
         Timer(const Duration(seconds: 5), () {
@@ -1801,6 +1822,17 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
         'message': 'تم صرف المكافأة للمستخدم ${user.name} بمبلغ ${salaryPaid} جنيه',
         'timestamp': DateTime.now(),
       }, SetOptions(merge: true));
+      batch.set(
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('notifications')
+            .doc(),
+        {
+          'message': 'تم صرف المكافأة للمستخدم ${user.name} بمبلغ ${salaryPaid} جنيه',
+          'timestamp': DateTime.now(),
+        },
+      );
         batch.update(FirebaseFirestore.instance
             .collection('users')
             .doc(userId), {'totalSalary': FieldValue.increment(int.parse(salaryPaid))});
@@ -2020,7 +2052,17 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
       for (DocumentSnapshot userDoc in usersDocs) {
         batch.delete(userDoc.reference);
       }
-
+      //this is my firebase schema also
+      //collection('users').doc(userId).collection('schedule').doc(scheduleId).delete();
+      //delete for all users
+      for (DocumentSnapshot userDoc in usersDocs) {
+        print('userDoc.id: ${userDoc.id}');
+        batch.delete(FirebaseFirestore.instance
+            .collection('users')
+            .doc(userDoc.id)
+            .collection('schedules')
+            .doc(schedulesIds[i]));
+      }
       batch.delete(scheduleRef);
     }
 

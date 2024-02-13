@@ -1,12 +1,10 @@
-import 'dart:isolate';
 //import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:admin_future/add_grouup_of_schedules/presentation/onboarding_screen.dart';
 import 'package:admin_future/home/business_logic/Home/manage_attendence_cubit%20.dart';
 import 'package:admin_future/manage_users_coaches/business_logic/manage_users_cubit.dart';
-import 'package:admin_future/registeration/presenation/widget/fetch_functions.dart';
-import 'package:admin_future/registeration/presenation/widget/work_manager.dart';
+import 'package:admin_future/registeration/business_logic/auth_cubit/sign_up_cubit.dart';
 import 'package:admin_future/routiong.dart';
-import 'package:background_fetch/background_fetch.dart';
+//import 'package:background_fetch/background_fetch.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,33 +31,35 @@ void callbackDispatcher() {
     );
     //use android sett up to make the app work in the background
     FirebaseFirestore.instance.enableNetwork();
-   // FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
-   // FirebaseFirestore.instance.collection('dummy').doc('dummy4').set({'count': 1});
-    FirebaseFirestore.instance.collection('dummy').doc('dummy4').update({'count': FieldValue.increment(1)});
-    print("work manager mbroooooooook Native called background task: \n\n\n\n\n\n\n"
+    // FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
+    // FirebaseFirestore.instance.collection('dummy').doc('dummy4').set({'count': 1});
+   // FirebaseFirestore.instance.collection('dummy').doc('dummy4').update({'count': FieldValue.increment(1)});
+    if (kDebugMode) {
+      print("work manager mbroooooooook Native called background task: \n\n\n\n\n\n\n"
         "work manager "
-        ); //simpleTsk will be emitted here.
+    );
+    } //simpleTsk will be emitted here.
     return Future.value(true);
   });
 }
-@pragma('vm:entry-point')
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-final taskId = task.taskId;
-await Firebase.initializeApp(
-);
-FirebaseFirestore.instance.settings =
-const Settings(
-  persistenceEnabled: true,
-  cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-);
-//use android sett up to make the app work in the background
-FirebaseFirestore.instance.enableNetwork();
-//FirebaseFirestore.instance.collection('dummy').doc('dummy5').set({'fetch': 1});
-FirebaseFirestore.instance.collection('dummy').doc('dummy5').update({'fetch': FieldValue.increment(1)});
-print("backgroundFetch mbroooooooook Native called background task: \n\n\n\n\n\n\nbackgroundFetch"); //simpleTask will be emitted here.
-  // Do your work here...
-  BackgroundFetch.finish(taskId);
-}
+// @pragma('vm:entry-point')
+// void backgroundFetchHeadlessTask(HeadlessTask task) async {
+//   final taskId = task.taskId;
+//   await Firebase.initializeApp(
+//   );
+//   FirebaseFirestore.instance.settings =
+//   const Settings(
+//     persistenceEnabled: true,
+//     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+//   );
+// //use android sett up to make the app work in the background
+//   FirebaseFirestore.instance.enableNetwork();
+// //FirebaseFirestore.instance.collection('dummy').doc('dummy5').set({'fetch': 1});
+//   FirebaseFirestore.instance.collection('dummy').doc('dummy5').update({'fetch': FieldValue.increment(1)});
+//   print("backgroundFetch mbroooooooook Native called background task: \n\n\n\n\n\n\nbackgroundFetch"); //simpleTask will be emitted here.
+//   // Do your work here...
+//   BackgroundFetch.finish(taskId);
+// }
 
 late String mainRoute;
 //final remoteConfig = //firabase remote config
@@ -90,52 +90,50 @@ Future<void> main() async {
   FirebaseFirestore.instance.settings =
   const Settings(
     persistenceEnabled: true,
-  cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
   //use android sett up to make the app work in the background
   FirebaseFirestore.instance.enableNetwork();
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  scheduleTask();
-// BackgroundFetch.scheduleTask(
-//     TaskConfig
-//       (
-//       taskId: "com.transistorsoft.customtask",
-//       delay: 30000,
-//       periodic: true,
-//       forceAlarmManager: true,
-//       stopOnTerminate: false,
-//       enableHeadless: true,
-//       startOnBoot: true,
-//     ),
-//   );
-  BackgroundFetch.configure(
-    BackgroundFetchConfig(
-      minimumFetchInterval: 1, // Set the interval for the task in minutes
-      stopOnTerminate: false, // Continue running the task even if the app is closed
-      enableHeadless: true, // Enable handling of tasks in the background isolate
-      requiresBatteryNotLow: false, // Allow running the task even if the battery is low
-      requiresCharging: false,
-      forceAlarmManager: true,
-    //give all permissions to the app
-      startOnBoot: true, // Run the task once the device is powered on
-    ),    (String taskId) async {
-      // This callback is called when the app is in the background and a task is triggered.
-          await Firebase.initializeApp(
-    );
-    FirebaseFirestore.instance.settings =
-    const Settings(
-      persistenceEnabled: true,
-      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-    );
+ // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+ //  BackgroundFetch.scheduleTask(
+ //    TaskConfig
+ //      (
+ //      taskId: "com.transistorsoft.customtask",
+ //      delay: 30000,
+ //      periodic: true,
+ //      forceAlarmManager: true,
+ //      stopOnTerminate: false,
+ //      enableHeadless: true,
+ //      startOnBoot: true,
+ //    ),
+ //  );
+ //  BackgroundFetch.configure(
+ //    BackgroundFetchConfig(
+ //      minimumFetchInterval: 1, // Set the interval for the task in minutes
+ //      stopOnTerminate: false, // Continue running the task even if the app is closed
+ //      enableHeadless: true, // Enable handling of tasks in the background isolate
+ //      requiresBatteryNotLow: false, // Allow running the task even if the battery is low
+ //      requiresCharging: false,
+ //      forceAlarmManager: true,
+ //      //give all permissions to the app
+ //      startOnBoot: true, // Run the task once the device is powered on
+ //    ),    (String taskId) async {
+ //    // This callback is called when the app is in the background and a task is triggered.
+ //    await Firebase.initializeApp(
+ //    );
+ //    FirebaseFirestore.instance.settings =
+ //    const Settings(
+ //      persistenceEnabled: true,
+ //      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+ //    );
     //use android sett up to make the app work in the background
-    FirebaseFirestore.instance.enableNetwork();
-    //FirebaseFirestore.instance.collection('dummy').doc('dummy3').set({'fetch': 1});
-    FirebaseFirestore.instance.collection('dummy').doc('dummy3').update({'fetch': FieldValue.increment(1)});
-    print("dummy3 fetchhhhhhhhhh mbroooooooook Native called background task: \n\n\n\n\n\n\n backgroundFetch"); //simpleTask will be emitted here.
-    },
-  );
- BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
- scheduleTask();
+  //   FirebaseFirestore.instance.enableNetwork();
+  //   //FirebaseFirestore.instance.collection('dummy').doc('dummy3').set({'fetch': 1});
+  //   FirebaseFirestore.instance.collection('dummy').doc('dummy3').update({'fetch': FieldValue.increment(1)});
+  //   print("dummy3 fetchhhhhhhhhh mbroooooooook Native called background task: \n\n\n\n\n\n\n backgroundFetch"); //simpleTask will be emitted here.
+  // },
+  // );
+  // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   // BackgroundFetch.scheduleTask(
   //   TaskConfig
   //     (
@@ -146,15 +144,14 @@ Future<void> main() async {
   //     stopOnTerminate: false,
   //     enableHeadless: true,
   //     startOnBoot: true,
-  //
   //   ),
   // );
 //  await AndroidAlarmManager.initialize();
 
-     Workmanager().initialize(
-         callbackDispatcher,
-          isInDebugMode: kDebugMode,
-     );
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: kDebugMode,
+  );
 
 
   if (FirebaseAuth.instance.currentUser == null) {
@@ -163,6 +160,7 @@ Future<void> main() async {
     if (kDebugMode) {
       print('user is not null');
       print(FirebaseAuth.instance.currentUser!.uid);
+      print(FirebaseAuth.instance.currentUser!.phoneNumber);
     }
     //uid
     if (kDebugMode) {
@@ -183,7 +181,7 @@ Future<void> main() async {
   //   print(event.notification!.body);
   // });
   // background notification
- // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   //firebase messaging PERMISSION
   // await FirebaseMessaging.instance.requestPermission(
   //   alert: true,
@@ -199,8 +197,7 @@ Future<void> main() async {
 
   BlocOverrides.runZoned(() => runApp(const MyApp()),
       blocObserver: MyBlocObserver());
-   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-   scheduleTask();
+  // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   // BackgroundFetch.scheduleTask(
   //   TaskConfig
   //     (
@@ -212,26 +209,19 @@ Future<void> main() async {
   //     enableHeadless: true,
   //   ),
   // );
-  registerPeriodicTask(
-    uniqueName: '2',
-        taskName: '3',
-  );
-//         Workmanager().registerPeriodicTask(
+
+//   Workmanager().registerPeriodicTask(
 // //call dummy function to make the app work in the background
 //     '2',
 //     '3',
 //     //8 hours
-//      frequency: const Duration(seconds: 30 ),
+//     frequency: const Duration(seconds: 30 ),
 //     //25 seconds
 //     initialDelay: const Duration(seconds:35),
 //     // constraints: Constraints(
 //     //networkType: NetworkType.connected,
 //     //  ),
 //   );
-  registerPeriodicTask(
-    uniqueName: '3',
-    taskName: '4',
-  );
 //   Workmanager().registerPeriodicTask(
 // //call dummy function to make the app work in the background
 //     '3',
@@ -240,49 +230,55 @@ Future<void> main() async {
 //     frequency: const Duration(seconds: 30 ),
 //     //25 seconds
 //     initialDelay: const Duration(seconds:20),
-//     // constraints: Constraints(
-//     //networkType: NetworkType.connected,
-//     //  ),
+//      constraints: Constraints(
+//     networkType: NetworkType.connected,
+//       ),
 //   );
-  registerOneOffTask();
-//   Workmanager().registerOneOffTask(
-// //call dummy function to make the app work in the background
-//     '4',
-//     '5',
-//     //8 hours
-//     //frequency: const Duration(seconds: 30),
-//     //25 seconds
-//     initialDelay: const Duration(seconds:30),
-//     // constraints: Constraints(
-//     //networkType: NetworkType.connected,
-//     //  ),
-//   );
-  registerPeriodicTask2();
+  Workmanager().registerOneOffTask(
+//call dummy function to make the app work in the background
+    'o',
+    'one',
+    //8 hours
+    //frequency: const Duration(seconds: 30),
+    //25 seconds
+    initialDelay: const Duration(seconds:30),
+    constraints: Constraints(
+    networkType: NetworkType.not_required,
+    requiresBatteryNotLow: true,
+     ),
+  );
+  Workmanager().registerPeriodicTask(
+//call dummy function to make the app work in the background
+    'p',
+    'periodic',
+    //8 hours
+    //frequency: const Duration(seconds: 30),
+    //25 seconds
+    //frequency: const Duration(seconds:30),
+    frequency: const Duration(minutes:300),
+    initialDelay: //zero,
+    const Duration(seconds: 0),
+    backoffPolicy: BackoffPolicy.linear,
+    // existingWorkPolicy: ExistingWorkPolicy.replace,
+    tag: 'tag',
+    constraints: Constraints(
+    networkType: NetworkType.not_required,
+    requiresBatteryNotLow: true,
+     ),
+  );
 //   Workmanager().registerPeriodicTask(
 // //call dummy function to make the app work in the background
-//     '5',
-//     '6',
-//     //8 hours
-//     //frequency: const Duration(seconds: 30),
-//     //25 seconds
-//     frequency: const Duration(seconds:30),
-//     backoffPolicy: BackoffPolicy.linear,
-//    // existingWorkPolicy: ExistingWorkPolicy.replace,
-//     tag: 'tag',
-//     // constraints: Constraints(
-//     //networkType: NetworkType.connected,
-//     //  ),
-//   );
-  registerPeriodicTask3();
-//   Workmanager().registerPeriodicTask(
-// //call dummy function to make the app work in the background
-//     '5',
-//     '6',
+//     '10',
+//     '11',
 //     //8 hours
 //     //frequency: const Duration(seconds: 30),
 //     //25 seconds
 //     outOfQuotaPolicy: OutOfQuotaPolicy.run_as_non_expedited_work_request,
 //     frequency: const Duration(seconds:30),
+//     constraints: Constraints(
+//      networkType: NetworkType.connected,
+//      requiresBatteryNotLow: true,
+//     ),
 //
 //     backoffPolicy: BackoffPolicy.linear,
 //     existingWorkPolicy: ExistingWorkPolicy.replace,
@@ -305,21 +301,38 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AddGroupCubit(
         ),
-        //  lazy: false,
+          //  lazy: false,
         ),
-     //   BlocProvider(create: (context) => SignUpCubit()
-     //     ..getBranches()
-     //   ),
+        //   BlocProvider(create: (context) => SignUpCubit()
+        //     ..getBranches()
+        //   ),
         BlocProvider(create: (context) => ManageUsersCubit()
-        //    ,lazy: false
+          //    ,lazy: false
         ),
         BlocProvider(create: (context) => ManageAttendenceCubit(),
-         // lazy: false,
+
+          // lazy: false,
           //    ..addToWhatsAppGroup('https://chat.whatsapp.com/FV27zAcLJocKycZDScif1S', '+2001020684123 ')
 
           //    ..getNearestScedule(
           //  )
         ),
+        // BlocProvider(create: (context) => SignUpCubit()
+        // //     ..addUser(lName: 'mohamed',
+        // //         fName: 'mariam',
+        // //         phone: '01114478816',
+        // //         password: '123456',
+        // //         role: 'admin',
+        //   //    ,lazy: false
+    //     // ),
+    //       ..createUser(uId: 'first',
+    // fname: 'mariam',
+    // lname: 'mohamed',
+    // phone: '01114478816',
+    // password: '123456',
+    // role: 'admin',
+    //     ),
+    //    ),
       ],child:  ScreenUtilInit(
       designSize: const Size(390, 845),
       minTextAdapt: true,
@@ -365,5 +378,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 

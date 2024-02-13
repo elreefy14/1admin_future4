@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import '../../data/adminModel.dart';
+
+import '../../../core/flutter_flow/form_field_controller.dart';
 import '../../data/userModel.dart';
+import '../../data/adminModel.dart';
 import '../../presenation/widget/widget.dart';
 import 'sign_up_state.dart';
 //**Collections and Documents:**
@@ -33,12 +36,18 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   static SignUpCubit get(context) => BlocProvider.of(context);
   void updateSelectedItems(List<String> newSelectedItems) {
+    print('updateSelectedItems');
+    print(newSelectedItems[0]);
+    print('updateSelectedItems');
+    print(newSelectedItems);
     // selectedItems = newSelectedItems[0];
     //add first item newSelectedItems to selectedItems
     selectedItems?.add(newSelectedItems[0]);
     emit(UpdateSelectedItemsState(
       selectedItems: selectedItems,
     ));
+    print(selectedItems);
+    print(selectedItems!.length);
 
   }
   final formKey = GlobalKey<FormState>();
@@ -49,7 +58,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   List<String>? checkboxGroupValues;
-  //FormFieldController<List<String>>? checkboxGroupValueController;
+  FormFieldController<List<String>>? checkboxGroupValueController;
   bool showPassword = true;
   void changePasswordVisibility(){
     showPassword = !showPassword;
@@ -121,11 +130,10 @@ class SignUpCubit extends Cubit<SignUpState> {
     required String role,  String? hourlyRate,
 
   }) async {
-
     emit(SignUpLoadingState());
-    //if password is empty
+    //     //if password is empty
     if (password.isEmpty) {
-     password = '123456';
+      password = '123456';
     }
     //if phone number is arabic number start with ٠١ turn it into english number
     if (phone.startsWith('٠١')) {
@@ -161,20 +169,20 @@ class SignUpCubit extends Cubit<SignUpState> {
       }
       //if role is admin
       //create user with random id
-      String uId = const Uuid().v4();
-      createUser(
-        role: role,
-        isUser: true,
-        // paasword: password,
-        // branches: selectedItems,
-        uId: //random id using uuid package
-        uId,
-
-        phone: phone,
-        fname: fName,
-        lname: lName,
-        hourlyRate :  int.parse(hourlyRate??'30')??30,
-      ); showToast(
+      String uId = Uuid().v4();
+      // createUser(
+      //   role: role,
+      //   isUser: true,
+      //   // paasword: password,
+      //   // branches: selectedItems,
+      //   uId: //random id using uuid package
+      //   uId,
+      //   phone: phone,
+      //   fname: fName,
+      //   lname: lName,
+      //   hourlyRate :  int.parse(hourlyRate??'30')??30,
+      // );
+      showToast(
         msg: 'تم التسجيل بنجاح',
         state: ToastStates.SUCCESS,
       );
@@ -187,28 +195,59 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpSuccessState(uId));
       return;
     }
+
     String? adminEmail = FirebaseAuth.instance.currentUser!.email;
+    String? uId = Uuid().v4();
     String? adminUid = FirebaseAuth.instance.currentUser!.uid;
-    //remove +2 from phone number
-    //so if phone number begin with +2 remove it
-
-
+   await FirebaseAuth.instance.signOut();
     FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: '$phone@placeholder.com',
-        password: password ?? '123456'
+        password: password
     ).then((value) async {
-      createUser(
-        role: role,
-        isUser: true,
-        // paasword: password,
-        // branches: selectedItems,
+      print('uid\n');
+      print(value.user!.uid);
+      // createUser(
+      //   role: role,
+      //   isUser: true,
+      //   // paasword: password,
+      //   // branches: selectedItems,
+      //   uId: value.user!.uid,
+      //   phone: phone,
+      //   fname: fName,
+      //   lname: lName,
+      //
+      //   hourlyRate :  int.parse(hourlyRate??'30')??30,
+      // );
+      UserModel model = UserModel(
+        role: 'coach',
+        hourlyRate:  int.parse(hourlyRate??'30')??30,
+        totalHours: 0,
+        totalSalary: 0,
+        currentMonthHours: 0,
+        currentMonthSalary: 0,
+        name: fName! + ' ' + lName!,
         uId: value.user!.uid,
-        phone: phone,
-        fname: fName,
         lname: lName,
+        fname: fName,
+        token: '',
+        phone: phone,
         pid: adminUid,
-        hourlyRate :  int.parse(hourlyRate??'30')??30,
+        numberOfSessions: 0,
+        date: Timestamp.now(),
+        branches:[],
+        password: password,
       );
+//
+      saveUserToContactList(
+        name: fName + ' ' + lName,
+        phoneNumber: phone!,
+      );
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(value.user!.uid)
+          .set(model.toMap());
+      String? adminPassword;
+      String? adminPhone;
       //get email from firebase and send it to admin to add it to his list
       await FirebaseFirestore.instance
           .collection('admins')
@@ -220,8 +259,8 @@ class SignUpCubit extends Cubit<SignUpState> {
         );
         //sign out from user account
         await FirebaseAuth.instance.signOut();
-        String? adminPhone = value.data()?['phone'];
-        String? adminPassword = value.data()?['password'];
+        adminPhone = value.data()?['phone'];
+        adminPassword = value.data()?['password'];
         if (kDebugMode) {
           print(adminEmail);
           print(adminPassword);
@@ -234,9 +273,18 @@ class SignUpCubit extends Cubit<SignUpState> {
           print(userCredential.user!.uid);
         }
       }
+
+      );
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: '$adminPhone@placeholder.com',
+        password: adminPassword!,
       );
 
       //clear text fields
+      // showToast(
+      //           msg: 'تم التسجيل بنجاح',
+      //           state: ToastStates.SUCCESS,
+      //         );
       firstNameController.clear();
       lastNameController.clear();
       phoneController.clear();
@@ -246,7 +294,9 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpSuccessState(value.user!.uid));
 
     }).catchError((error) {
+
       String? errorMessage;
+      print('erro \n'+error.toString());
       switch (error.code) {
       //case user already exists
         case "email-already-in-use":
@@ -295,7 +345,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     bool isUser = false,
     String? paasword,
     String? role,
-    String? pid,
     required String? uId,
     required String? phone,
     required String? fname,
@@ -312,52 +361,35 @@ class SignUpCubit extends Cubit<SignUpState> {
         totalSalary: 0,
         currentMonthHours: 0,
         currentMonthSalary: 0,
-        name: '${fname!} ${lname!}',
+        name: fname! + ' ' + lname!,
         uId: uId,
         lname: lname,
         fname: fname,
         token: '',
         phone: phone,
-        pid: pid??FirebaseAuth.instance.currentUser!.uid,
+        pid: FirebaseAuth.instance.currentUser!.uid,
         numberOfSessions: 0,
         date: Timestamp.now(),
         branches: branches??[],
       );
-      //if phone number is not saved already in the contact list
 
       saveUserToContactList(
-        name: '$fname $lname',
+        name: fname + ' ' + lname,
         phoneNumber: phone!,
       );
-       //use batches
-      WriteBatch batch = FirebaseFirestore.instance.batch();
-
-      batch.set(
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(uId),
-        model.toMap(),
-      );
-      if (role == 'user') {
-        batch.set(
-            FirebaseFirestore.instance.collection('admins').
-            doc(FirebaseAuth.instance.currentUser?.uid).collection('dates').doc('${DateTime.now().month.toString()}-${DateTime.now().year.toString()}'),
-            {
-              'setFlag': true,
-            },
-            SetOptions(merge: true));
-        batch.update(
-        FirebaseFirestore.instance.collection('admins').
-        doc(FirebaseAuth.instance.currentUser?.uid).collection('dates').doc('${DateTime.now().month.toString()}-${DateTime.now().year.toString()}'),
-        {
-          'numberOfNewMembers':FieldValue.increment(1),
-        },
-      );
-      }
-      batch.commit();
-      emit(CreateUserSuccessState(uId!));
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .set(model.toMap())
+          .then((value) {
+        //save user to conatct list in the device
 
 
+        emit(CreateUserSuccessState(uId!));
+      }).catchError((error) {
+        print(error.toString());
+        emit(CreateUserErrorState());
+      });
     } else {
       AdminModel model = AdminModel(
         password: paasword,
@@ -384,6 +416,203 @@ class SignUpCubit extends Cubit<SignUpState> {
       });
     }
   }
+   Future<void> addTrainee({
+    required String lname,
+    required String fname,
+    required String phone,
+    required String password,
+     String? hourlyRate,
+
+  }) async {
+    emit(SignUpLoadingState());
+    String uId = Uuid().v4();
+
+    //     //if password is empty
+    if (password.isEmpty) {
+      password
+      = '123456';
+    }
+    //if phone number is arabic number start with ٠١ turn it into english number
+    if (phone.startsWith('٠١')) {
+      phone = phone.replaceAll('٠', '0');
+      phone = phone.replaceAll('١', '1');
+      phone = phone.replaceAll('٢', '2');
+      phone = phone.replaceAll('٣', '3');
+      phone = phone.replaceAll('٤', '4');
+      phone = phone.replaceAll('٥', '5');
+      phone = phone.replaceAll('٦', '6');
+      phone = phone.replaceAll('٧', '7');
+      phone = phone.replaceAll('٨', '8');
+      phone = phone.replaceAll('٩', '9');
+    }
+    phone = phone.replaceAll(' ', '');
+    if (phone.startsWith('+2')) {
+      phone = phone.substring(2);
+      //delete any spaces
+    }
+    UserModel model = UserModel(
+      role: 'user',
+      hourlyRate:  int.parse(hourlyRate??'30')??30,
+      totalHours: 0,
+      totalSalary: 0,
+      currentMonthHours: 0,
+      currentMonthSalary: 0,
+      name: fname! + ' ' + lname!,
+      uId: uId,
+      lname: lname,
+      fname: fname,
+      token: '',
+      phone: phone,
+      pid: FirebaseAuth.instance.currentUser!.uid,
+      numberOfSessions: 0,
+      date: Timestamp.now(),
+      branches:[],
+    );
+
+    saveUserToContactList(
+      name: fname + ' ' + lname,
+      phoneNumber: phone!,
+    );
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+        batch.set(
+            FirebaseFirestore.instance.collection('admins').
+            doc(FirebaseAuth.instance.currentUser?.uid).collection('dates').doc('${DateTime.now().month.toString()}-${DateTime.now().year.toString()}'),
+            {
+              'setFlag': true,
+            },
+            SetOptions(merge: true));
+        batch.update(
+          FirebaseFirestore.instance.collection('admins').
+          doc(FirebaseAuth.instance.currentUser?.uid).collection('dates').doc('${DateTime.now().month.toString()}-${DateTime.now().year.toString()}'),
+          {
+            'numberOfNewMembers':FieldValue.increment(1),
+          },
+        );
+
+    //
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(uId)
+    //     .set(model.toMap());//use batch
+    batch.set(
+      FirebaseFirestore.instance.collection('users').doc(uId),
+      model.toMap(),
+    );
+    batch.commit();
+    showToast(
+              msg: 'تم التسجيل بنجاح',
+              state: ToastStates.SUCCESS,
+            );
+    firstNameController.clear();
+    lastNameController.clear();
+    phoneController.clear();
+    passwordController.clear();
+    hourlyRateController.clear();
+      //save user to conatct list in the device
+      emit(CreateUserSuccessState(uId!));
+
+  }
+  Future<void> addCoach({
+    required String lname,
+    required String fname,
+    required String phone,
+    required String password,
+    String? hourlyRate,
+
+  }) async {
+    emit(SignUpLoadingState());
+    String uId = Uuid().v4();
+
+    //     //if password is empty
+    if (password.isEmpty) {
+      password
+      = '123456';
+    }
+    //if phone number is arabic number start with ٠١ turn it into english number
+    if (phone.startsWith('٠١')) {
+      phone = phone.replaceAll('٠', '0');
+      phone = phone.replaceAll('١', '1');
+      phone = phone.replaceAll('٢', '2');
+      phone = phone.replaceAll('٣', '3');
+      phone = phone.replaceAll('٤', '4');
+      phone = phone.replaceAll('٥', '5');
+      phone = phone.replaceAll('٦', '6');
+      phone = phone.replaceAll('٧', '7');
+      phone = phone.replaceAll('٨', '8');
+      phone = phone.replaceAll('٩', '9');
+    }
+    phone = phone.replaceAll(' ', '');
+    if (phone.startsWith('+2')) {
+      phone = phone.substring(2);
+      //delete any spaces
+    }
+    //save current email and uid
+    String? adminEmail = FirebaseAuth.instance.currentUser!.email;
+    String? adminUid = FirebaseAuth.instance.currentUser!.uid;
+    //get phone and password from collection admins .dcc admin uid
+    //then save them in varaible which will be used now
+
+    //debug
+    print('\n\nadminemail'+adminEmail!??'');
+    print('\n\nadmin uid'+adminUid!??'');
+    //sign out
+  await FirebaseAuth.instance.signOut();
+  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: '$phone@placeholder.com',
+        password: password
+    );
+
+    String? coachEmail = FirebaseAuth.instance.currentUser!.email;
+    String? coachUid = FirebaseAuth.instance.currentUser!.uid;
+    print('\n\coachEmail'+coachEmail!??'');
+    print('\n\coachUid uid'+coachUid!??'');
+
+
+
+
+
+    ///
+    UserModel model = UserModel(
+      role: 'coach',
+      hourlyRate:  int.parse(hourlyRate??'30')??30,
+      totalHours: 0,
+      totalSalary: 0,
+      currentMonthHours: 0,
+      currentMonthSalary: 0,
+      name: fname! + ' ' + lname!,
+      uId: uId,
+      lname: lname,
+      fname: fname,
+      token: '',
+      phone: phone,
+      pid: FirebaseAuth.instance.currentUser!.uid,
+      numberOfSessions: 0,
+      date: Timestamp.now(),
+      branches:[],
+    );
+
+    saveUserToContactList(
+      name: fname + ' ' + lname,
+      phoneNumber: phone!,
+    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .set(model.toMap());
+    showToast(
+      msg: 'تم التسجيل بنجاح',
+      state: ToastStates.SUCCESS,
+    );
+    firstNameController.clear();
+    lastNameController.clear();
+    phoneController.clear();
+    passwordController.clear();
+    hourlyRateController.clear();
+    //save user to conatct list in the device
+    emit(CreateUserSuccessState(uId!));
+
+  }
+
   Future<void> signUp({
     required String lName,
     required String fName,
@@ -395,6 +624,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         email: '$phone@placeholder.com',
         password: password
     ).then((value) {
+      print(value.user!.uid);
       createUser(
         branches: selectedItems,
         uId: value.user!.uid,
@@ -447,6 +677,9 @@ class SignUpCubit extends Cubit<SignUpState> {
   List<String>? selectedItems;
   void add(String itemValue) {
     selectedItems ??= [];
+    print('add');
+    print(itemValue);
+    print(itemValue.toString());
     selectedItems?.add(itemValue.toString());
 
 
@@ -454,6 +687,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(UpdateSelectedItemsState(
       selectedItems: selectedItems,
     ));
+    print(selectedItems);
   }
 
   void remove(String itemValue) {
@@ -462,6 +696,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(UpdateSelectedItemsState(
       selectedItems: selectedItems,
     ));
+    print(selectedItems);
   }
   void itemChange(String itemValue, bool isSelected, BuildContext context) {
     //final List<String> updatedSelection = List.from(
@@ -543,14 +778,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> saveUserToContactList({required String name, required String phoneNumber}) async {
     // Check if the permission has already been granted
     PermissionStatus status = await Permission.contacts.status;
-   //first check if phone number is saved or not in the contact list
-    Iterable<Contact> contacts = await ContactsService.getContactsForPhone(phoneNumber);
-    print(contacts.length);
-    print('dghhhhhhhhhhhhhthdsr');
-    if (contacts.isNotEmpty) {
-      //if phone number is already saved in the contact list
-      return;
-    }
+
     if (status.isGranted) {
       // Permission has already been granted, proceed with saving the contact
       final newContact = Contact();
@@ -567,6 +795,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       // Save the contact to the device's contact list
       await ContactsService.addContact(newContact);
 
+      print('User saved to contact list');
     } else {
       // Permission has not been granted, request the permission from the user
       status = await Permission.contacts.request();
@@ -587,8 +816,10 @@ class SignUpCubit extends Cubit<SignUpState> {
         // Save the contact to the device's contact list
         await ContactsService.addContact(newContact);
 
+        print('User saved to contact list');
       } else {
         // Permission has been denied, handle the error or show a message to the user
+        print('Permission denied');
       }
     }
   }

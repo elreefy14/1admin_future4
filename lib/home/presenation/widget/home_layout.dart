@@ -140,16 +140,70 @@ class HomeLayout extends StatelessWidget {
                                 ),
                                // ManageAttendenceCubit.get(context).nearestSchedule == null
                                //     ?
-                                Text(
-                                        'مرحبا بعودتك',
-                                        style: TextStyle(
-                                          color: const Color(0xFFB9B9B9),
-                                          fontSize: 16.sp,
-                                          fontFamily: 'Montserrat-Arabic',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.6.h,
-                                        ),
-                                      )
+                              InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        //are you sure you want to sign out?
+                                        title: const Text('هل انت متأكد من تسجيل الخروج؟'),
+                                        actions: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              SizedBox(
+                                                width: 100.0,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: Colors.white,
+                                                  ),
+                                                  child: const Text(
+                                                    'لا',
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 100.0,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                   // Navigator.pop(context);
+                                                    //sign out from firebase and navigate to login page
+                                                    FirebaseAuth.instance.signOut(
+                                                    );
+                                                    //remove all firebase cache
+                                                    Navigator.pushNamed(context, AppRoutes.login);
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: Colors.red.shade800,
+                                                  ),
+                                                  child: const Text(
+                                                    'نعم',
+                                                    style: TextStyle(color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'تسجيل الخروج',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.red,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              )
                                     // : Text(
                                     //     'الحصة القادمة في ${DateFormat('h:mm a', 'ar').format(DateTime.fromMillisecondsSinceEpoch(ManageAttendenceCubit.get(context).nearestSchedule!['start_time'].millisecondsSinceEpoch))}',
                                     //     style: TextStyle(

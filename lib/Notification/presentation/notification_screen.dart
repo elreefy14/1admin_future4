@@ -437,31 +437,34 @@ class NotificationScreen extends StatelessWidget {
                                         .subtract(const Duration(days: 1)))
                                 .orderBy('timestamp', descending: true),
                             emptyBuilder: (context) => Container(
-                                  // padding:EdgeInsets.only(top: 6, left: 8, bottom: 6),
-                                  padding: EdgeInsets.only(
-                                    top: 6.h,
-                                    left: 8.w,
-                                    bottom: 6.h,
+                              // padding:EdgeInsets.only(top: 6, left: 8, bottom: 6),
+                              padding: EdgeInsets.only(
+                                top: 6.h,
+                                left: 8.w,
+                                bottom: 6.h,
+                                right: 30.w,
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                MainAxisAlignment.end,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'لاتوجد اشعارات اليوم',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      color: Color(0xFF333333),
+                                      fontSize: 12,
+                                      fontFamily:
+                                      'IBM Plex Sans Arabic',
+                                      fontWeight: FontWeight.w300,
+                                    ),
                                   ),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'لاتوجد اشعارات اليوم',
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                          color: Color(0xFF333333),
-                                          fontSize: 12,
-                                          fontFamily: 'IBM Plex Sans Arabic',
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                ],
+                              ),
+                            ),
                             itemBuilder: (context, doc) {
                               return Padding(
                                 padding: EdgeInsets.only(

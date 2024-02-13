@@ -679,6 +679,31 @@ class ManageSchedulesScreen extends StatelessWidget {
                                                                           FieldValue.increment(totalHours),
                                                                           'totalSalary':FieldValue.increment(totalHours*user['hourlyRate'])
                                                                         });
+                                                                    //handle notification
+                                                                    // class NotificationModel {
+                                                                    //    String? message;
+                                                                    //   DateTime? timestamp;
+                                                                    //
+                                                                    //   NotificationModel({required this.message, required this.timestamp});
+                                                                    // //fromJson
+                                                                    //   factory NotificationModel.fromJson(Map<String, dynamic> json) {
+                                                                    //     return NotificationModel(
+                                                                    //       message: json['message'],
+                                                                    //       timestamp: DateTime.parse(json['timestamp']),
+                                                                    //     );
+                                                                    //   }
+                                                                    batch.set(
+                                                                        firestore
+                                                                            .collection('users').
+                                                                            doc(user['uid']).collection('notifications').doc(),
+                                                                            {
+                                                                       'message': 'تم اضافة ${totalHours} ساعات لحسابك',
+                                                                    'timestamp': Timestamp.now(),
+                                                                    },
+                                                                    );
+
+
+
                                                                     batch.commit();
 //                                                                       FirebaseFirestore.instance
 //                                                                           .collection('admins')
@@ -810,6 +835,15 @@ class ManageSchedulesScreen extends StatelessWidget {
 //                                                                           });
 //                                                                         }
 //                                                                       });
+                                                                    batch.set(
+                                                                      firestore
+                                                                          .collection('users').
+                                                                      doc(user['uid']).collection('notifications').doc(),
+                                                                      {
+                                                                        'message': 'تم خصم ${totalHours} ساعات من حسابك',
+                                                                        'timestamp': Timestamp.now(),
+                                                                      },
+                                                                    );
                                                                     batch.commit();
 
                                                                     //send notification to users model contain 2 fields message and timestamp
