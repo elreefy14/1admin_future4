@@ -1172,7 +1172,7 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
     int? userTotalSalary,
   }) async {
       latestUserId = userId;
-      emit(PaySalaryLoadingState());
+      emit(PayAllSalaryLoadingState());
 //      bool isConnected = await checkInternetConnectivity();
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
@@ -1790,7 +1790,7 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
   }) async {
       latestUserId = userId;
       currentTotalSalary = TotalSalary;
-      emit(PaySalaryLoadingState());
+      emit(PayBonusLoadingState());
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .doc(userId)

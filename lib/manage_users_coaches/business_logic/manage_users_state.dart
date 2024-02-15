@@ -202,3 +202,7 @@ class GetDaysLoadingState extends ManageUsersState {
 class GetDaysSuccessState extends ManageUsersState {
 
 }//UpdateListOfSchedulesState
+//PayAllSalaryLoadingState
+class PayAllSalaryLoadingState extends ManageUsersState {
+
+}//UpdateListOfSchedulesState

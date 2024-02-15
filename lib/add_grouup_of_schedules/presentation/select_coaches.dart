@@ -519,7 +519,11 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                             uid,salaryPaid: ManageUsersCubit.get(context).salaryController.text,
                                                           ).then((value) => Navigator.pop(context));
                                                         },
-                                                        child: Container(
+                                                        child:
+                                                            BlocBuilder<ManageUsersCubit, ManageUsersState>(
+  builder: (context, state) {
+    return                                                             state is PaySalaryLoadingState? const CircularProgressIndicator():
+    Container(
                                                           width: 130,
                                                           height: 40,
                                                           decoration: BoxDecoration(
@@ -539,7 +543,9 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        );
+  },
+),
                                                       ),
 
                                                       InkWell(
@@ -553,7 +559,10 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                             uid,
                                                           ).then((value) => Navigator.pop(context));
                                                         },
-                                                        child: Container(
+                                                        child: BlocBuilder<ManageUsersCubit, ManageUsersState>(
+  builder: (context, state) {
+    return                                                             state is PayAllSalaryLoadingState? const CircularProgressIndicator():
+    Container(
                                                           width: 130,
                                                           height: 40,
                                                           decoration: BoxDecoration(
@@ -573,7 +582,9 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        );
+  },
+),
                                                       )
                                                     ].divide(const SizedBox(width: 10)),
                                                   ),
@@ -780,7 +791,12 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                             salaryPaid: ManageUsersCubit.get(context).salaryController.text,
                                                           ).then((value) => Navigator.pop(context));
                                                         },
-                                                        child: Container(
+                                                        child:
+                                                        //PayBonusLoadingState
+                                                        BlocBuilder<ManageUsersCubit, ManageUsersState>(
+  builder: (context, state) {
+    return state is PayBonusLoadingState? const CircularProgressIndicator():
+                                                  Container(
                                                           width: 130,
                                                           height: 40,
                                                           decoration: BoxDecoration(
@@ -804,7 +820,9 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        );
+  },
+),
                                                       )
                                                     ].divide(const SizedBox(width: 10)),
                                                   ),
@@ -2071,7 +2089,11 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                           }
 
                                                         },
-                                                        child: Container(
+                                                        child: BlocBuilder<ManageUsersCubit, ManageUsersState>(
+  builder: (context, state) {
+    return
+      state is ReduceSessionsLoadingState ? const CircularProgressIndicator() :
+      Container(
                                                           width: 130,
                                                           height: 40,
                                                           decoration: BoxDecoration(
@@ -2094,7 +2116,9 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        );
+  },
+),
                                                       ),
                                                       isCoachInfoList??false ?
                                                       InkWell(
@@ -2363,7 +2387,14 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                           }
 
                                                         },
-                                                        child: Container(
+                                                        child: BlocBuilder<ManageUsersCubit, ManageUsersState>(
+  builder: (context, state) {
+    return
+  //    AddSessionsLoadingState
+    state is AddSessionsLoadingState
+        ? const CircularProgressIndicator()
+        :
+      Container(
                                                           width: 130,
                                                           height: 40,
                                                           decoration: BoxDecoration(
@@ -2386,7 +2417,9 @@ class ShowCoachesInDialog extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        );
+  },
+),
                                                       )
                                                     ].divide(const SizedBox(width: 10)),
                                                   ),
