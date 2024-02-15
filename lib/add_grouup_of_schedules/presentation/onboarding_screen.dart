@@ -324,6 +324,12 @@ class AddGroupCubit extends Cubit<AddGroupState> {
     _times[day]?['start'] = endTime.replacing(hour: endTime.hour - 1);
     emit(state.copyWith(times: _times));
   }
+  //update time to null
+  void updateTimeToNull(String day) {
+    _times[day]?['end'] = null;
+    _times[day]?['start'] = null;
+    emit(state.copyWith(times: _times));
+  }
   //edit thais to add list of maps for branch collection contains schedule.date as key and schedule.id as value
   late Map<String, Map<dynamic, dynamic>> nonNullableDays = {};
   Future<void> addGroup(
@@ -1631,7 +1637,9 @@ class OnboardingScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: 4.0.w,
                       ),
-                      child: InkWell(
+                      child: BlocBuilder<AddGroupCubit, AddGroupState>(
+  builder: (context, state) {
+    return InkWell(
                         onTap: () {
                           //print all   context.watch<AddGroupCubit>().state.times,
                          //if isAdd is false
@@ -1681,7 +1689,9 @@ class OnboardingScreen extends StatelessWidget {
                             //   context.read<AddGroupCubit>().state.maxUsers,
                           );
                           //clr   context.read<AddGroupCubit>().state.times,
-                          context.read<AddGroupCubit>().state.times.clear();
+
+                       //todo :delete comment
+                        //  context.read<AddGroupCubit>().state.times.clear();
                         },
                         child: BlocBuilder<AddGroupCubit, AddGroupState>(
                           builder: (context, state) {
@@ -1709,7 +1719,9 @@ class OnboardingScreen extends StatelessWidget {
                             );
                           },
                         ),
-                      ),
+                      );
+  },
+),
                     ),
 
                   if (context.watch<AddGroupCubit>().state.currentIndex <
@@ -1869,100 +1881,63 @@ class TimeSelectionScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              subtitle: Column(
+              subtitle: Row(
                 children: [
-                  //10
-                  SizedBox(
-                    height: 8.h,
+                  //small icon as delete button when click on it the time will be null
+                  // IconButton(
+                                    //   onPressed: () {
+                                    //     context.read<AddGroupCubit>().updateTimeToNull(day);
+                                    //   },
+                                    //   icon: const Icon(
+                                    //     Icons.delete_outlined,
+                                    //     color: Colors.red,
+                                    //   ),
+                                    // ),
+            //       InkWell(
+            //         onTap:() {
+            // context.read<AddGroupCubit>().updateTimeToNull(day);
+            // } ,
+            //         child: IconButton(
+            //           onPressed: () {
+            //             context.read<AddGroupCubit>().updateTimeToNull(day);
+            //           },
+            //           icon: const Icon(
+            //             Icons.delete_outlined,
+            //             color: Colors.red,
+            //           ),
+            //         ),
+            //       ),
+                  //instead of above icon use this svg image
+                  // SvgPicture.asset(
+                  //                                           'assets/images/delete-2_svgrepo.com.svg')
+                  Container(
+                    width: 25.w,
+                    height: 25.h,
+                    child: InkWell(
+                      onTap: () {
+                        context.read<AddGroupCubit>().updateTimeToNull(day);
+                      },
+                      child: SvgPicture.asset(
+                        'assets/images/delete-2_svgrepo.com.svg',
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+                  SizedBox(
+                    width: 10.0.w,
+                  ),
+                  Column(
                     children: [
-                      InkWell(
-                        onTap: () async {
-                          TimeOfDay? endTime = await showTimePicker(
-                            builder: (context, child) {
-                              return Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: const ColorScheme.light(
-                                    primary: Color(0xf767676), // header background color
-                                    onPrimary: Colors.black, // header text color
-                                    onSurface: Colors.black, // body text color
-                                    surface: Colors.white,
-                                    secondary: Colors.blue,
-                                    onSecondary: Colors.white,
-                                  ),
-                                  textButtonTheme: TextButtonThemeData(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Colors.blue, // button text color
-                                    ),
-                                  ),
-                                ),
-                                child: child!,
-                              );
-                            },
-                            context: context,
-                            initialTime: _times[day]?['end'] ?? TimeOfDay.now(),
-                          );
-                          if (endTime != null) {
-                            // setState(() {
-                            //   //
-                            //   _times[day]?['end'] = endTime;
-                            //   //start time equal hour minus end time
-                            //   _times[day]?['start'] =
-                            //       endTime.replacing(hour: endTime.hour - 1);
-                            // });
-                            context.read<AddGroupCubit>().updateTime(day, endTime);
-                          }
-                        },
-                        child: Container(
-                          width: 125.w,
-                          height: 35.h,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFF6F6F6),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
-                          ),
-                          child: Text(
-                            // _times[day]?['end']?.format(context) ?? 'نهاية التدريب',
-                            //make it in arabic like that 11 ص
-                            _times[day]?['end']
-                                ?.format(context)
-                                .toString()
-                                .replaceAll('PM', 'م')
-                                .replaceAll('AM', 'ص') ??
-                                'نهاية التدريب',
-
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: const Color(0xFF666666),
-                              fontSize: 16.sp,
-                              fontFamily: 'IBM Plex Sans Arabic',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                        ),
+                      //10
+                      SizedBox(
+                        height: 8.h,
                       ),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(width: 8.0),
-                          Text(
-                            '-',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.sp,
-                              fontFamily: 'IBM Plex Sans Arabic',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                          SizedBox(width: 8.0.w),
                           InkWell(
                             onTap: () async {
-                              TimeOfDay? startTime = await showTimePicker(
+                              TimeOfDay? endTime = await showTimePicker(
                                 builder: (context, child) {
                                   return Theme(
                                     data: Theme.of(context).copyWith(
@@ -1984,56 +1959,21 @@ class TimeSelectionScreen extends StatelessWidget {
                                   );
                                 },
                                 context: context,
-                                initialTime:
-                                _times[day]?['start'] ?? TimeOfDay.now(),
+                                initialTime: _times[day]?['end'] ?? TimeOfDay.now(),
                               );
-                              if (startTime != null) {
+                              if (endTime != null) {
                                 // setState(() {
-                                //   //convert start time to time stamp
-
-                                //   _times[day]?['start'] = startTime;
-                                //   //end time equal hour plus start time
-                                //   TimeOfDay endTime =
-                                //       startTime.replacing(hour: startTime.hour + 1);
+                                //   //
                                 //   _times[day]?['end'] = endTime;
-                                //   //save the start time as timeStamp get
-
-                                //   //  DateTime getNearestDayOfWeek(String dayOfWeek) {
-                                //   // Get the current date
-                                //   //   DateTime now = DateTime.now();
-
-                                //   //   // Get the integer value of the selected day of the week
-                                //   //   int selectedDayOfWeek = [
-                                //   //     'الأحد',
-                                //   //     'الاثنين',
-                                //   //     'الثلاثاء',
-                                //   //     'الأربعاء',
-                                //   //     'الخميس',
-                                //   //     'الجمعة',
-                                //   //     'السبت'
-                                //   //   ].indexOf(dayOfWeek);
-
-                                //   //   // Calculate the difference between the selected day of the week and the current day of the week
-                                //   //   int difference = selectedDayOfWeek - now.weekday;
-
-                                //   //   // If the difference is negative, add 7 to get the nearest day of the week
-                                //   //   if (difference < 0) {
-                                //   //     difference += 7;
-                                //   //   }
-
-                                //   //   // Add the difference to the current date to get the nearest day of the week
-                                //   //   DateTime nearestDay = now.add(Duration(days: difference));
-
-                                //   //   return nearestDay;
-                                //   // }
+                                //   //start time equal hour minus end time
+                                //   _times[day]?['start'] =
+                                //       endTime.replacing(hour: endTime.hour - 1);
                                 // });
-                                context
-                                    .read<AddGroupCubit>()
-                                    .updateTime2(day, startTime);
+                                context.read<AddGroupCubit>().updateTime(day, endTime);
                               }
                             },
                             child: Container(
-                              width: 125.w,
+                              width: 105.w,
                               height: 35.h,
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
@@ -2042,14 +1982,15 @@ class TimeSelectionScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(4)),
                               ),
                               child: Text(
-                                // _times[day]?['start']?.format(context) ?? 'بداية التدريب',
+                                // _times[day]?['end']?.format(context) ?? 'نهاية التدريب',
                                 //make it in arabic like that 11 ص
-                                _times[day]?['start']
+                                _times[day]?['end']
                                     ?.format(context)
                                     .toString()
                                     .replaceAll('PM', 'م')
                                     .replaceAll('AM', 'ص') ??
-                                    'بداية التدريب',
+                                    'نهاية التدريب',
+
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: const Color(0xFF666666),
@@ -2061,10 +2002,129 @@ class TimeSelectionScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 8.0),
+                              Text(
+                                '-',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.sp,
+                                  fontFamily: 'IBM Plex Sans Arabic',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                ),
+                              ),
+                              SizedBox(width: 8.0.w),
+                              InkWell(
+                                onTap: () async {
+                                  TimeOfDay? startTime = await showTimePicker(
+                                    builder: (context, child) {
+                                      return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          colorScheme: const ColorScheme.light(
+                                            primary: Color(0xf767676), // header background color
+                                            onPrimary: Colors.black, // header text color
+                                            onSurface: Colors.black, // body text color
+                                            surface: Colors.white,
+                                            secondary: Colors.blue,
+                                            onSecondary: Colors.white,
+                                          ),
+                                          textButtonTheme: TextButtonThemeData(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue, // button text color
+                                            ),
+                                          ),
+                                        ),
+                                        child: child!,
+                                      );
+                                    },
+                                    context: context,
+                                    initialTime:
+                                    _times[day]?['start'] ?? TimeOfDay.now(),
+                                  );
+                                  if (startTime != null) {
+                                    // setState(() {
+                                    //   //convert start time to time stamp
+
+                                    //   _times[day]?['start'] = startTime;
+                                    //   //end time equal hour plus start time
+                                    //   TimeOfDay endTime =
+                                    //       startTime.replacing(hour: startTime.hour + 1);
+                                    //   _times[day]?['end'] = endTime;
+                                    //   //save the start time as timeStamp get
+
+                                    //   //  DateTime getNearestDayOfWeek(String dayOfWeek) {
+                                    //   // Get the current date
+                                    //   //   DateTime now = DateTime.now();
+
+                                    //   //   // Get the integer value of the selected day of the week
+                                    //   //   int selectedDayOfWeek = [
+                                    //   //     'الأحد',
+                                    //   //     'الاثنين',
+                                    //   //     'الثلاثاء',
+                                    //   //     'الأربعاء',
+                                    //   //     'الخميس',
+                                    //   //     'الجمعة',
+                                    //   //     'السبت'
+                                    //   //   ].indexOf(dayOfWeek);
+
+                                    //   //   // Calculate the difference between the selected day of the week and the current day of the week
+                                    //   //   int difference = selectedDayOfWeek - now.weekday;
+
+                                    //   //   // If the difference is negative, add 7 to get the nearest day of the week
+                                    //   //   if (difference < 0) {
+                                    //   //     difference += 7;
+                                    //   //   }
+
+                                    //   //   // Add the difference to the current date to get the nearest day of the week
+                                    //   //   DateTime nearestDay = now.add(Duration(days: difference));
+
+                                    //   //   return nearestDay;
+                                    //   // }
+                                    // });
+                                    context
+                                        .read<AddGroupCubit>()
+                                        .updateTime2(day, startTime);
+                                  }
+                                },
+                                child: Container(
+                                  width: 105.w,
+                                  height: 35.h,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFFF6F6F6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4)),
+                                  ),
+                                  child: Text(
+                                    // _times[day]?['start']?.format(context) ?? 'بداية التدريب',
+                                    //make it in arabic like that 11 ص
+                                    _times[day]?['start']
+                                        ?.format(context)
+                                        .toString()
+                                        .replaceAll('PM', 'م')
+                                        .replaceAll('AM', 'ص') ??
+                                        'بداية التدريب',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: const Color(0xFF666666),
+                                      fontSize: 16.sp,
+                                      fontFamily: 'IBM Plex Sans Arabic',
+                                      fontWeight: FontWeight.w400,
+                                      height: 0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
                   ),
+
                 ],
               ),
               // onTap: () async {
