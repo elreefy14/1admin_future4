@@ -2,6 +2,7 @@ import 'package:admin_future/core/flutter_flow/flutter_flow_util.dart';
 import 'package:admin_future/manage_users_coaches/business_logic/manage_users_cubit.dart';
 import 'package:admin_future/home/presenation/widget/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,8 +50,8 @@ class EditUsers extends StatelessWidget {
                             user.image,
                                 //??
                                 //'https://picsum.photos/seed/1/600',
-                            width: 130.h,
-                            height: 130.w,
+                            width: 110.h,
+                            height: 110.w,
                             fit: BoxFit.cover,
                           ):
                           // SvgPicture.asset(
@@ -62,8 +63,8 @@ class EditUsers extends StatelessWidget {
                           // ),
                           Image.asset(
                               'assets/images/Ellipse 1.jpg',
-                              width: 130.h,
-                              height: 130.w,
+                              width: 110.h,
+                              height: 110.w,
                               fit: BoxFit.cover,
                           ),
                         ),
@@ -391,6 +392,132 @@ class EditUsers extends StatelessWidget {
                             ),
                           ],
                         ),
+                        //container which show coach password with icon to copy password to clipboard when click on it
+                      //if user is coach
+                        if(isCoach)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    //password
+                                    'كلمة المرور',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                      fontFamily: 'Readex Pro',
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.copy),
+                                        onPressed: () {
+                                          Clipboard.setData(ClipboardData(
+                                            text: ManageUsersCubit.get(context).passwordController.text,
+                                          ));
+                                          //show snackbar to inform user that password copied to clipboard
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('تم نسخ كلمة المرور'),
+                                              duration: Duration(seconds: 3),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      Container(
+                                        height: 50,
+                                        decoration: const BoxDecoration(),
+                                        child: Align(
+                                          alignment: const AlignmentDirectional(1, 0),
+                                          child: SizedBox(
+                                            width: MediaQuery.sizeOf(context).width * 0.7,
+                                            child: TextFormField(
+                                              controller: ManageUsersCubit.get(context)
+                                                  .passwordController,
+                                              autofocus: false,
+                                              readOnly: true, // Make the field uneditable
+                                              obscureText: false,
+                                              decoration: InputDecoration(
+                                                labelStyle: FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .override(
+                                                  fontFamily: 'Readex Pro',
+                                                  fontSize: 10,
+                                                ),
+                                                //          hintText: user.phone,
+                                                hintStyle: FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .override(
+                                                  fontFamily: 'Readex Pro',
+                                                  fontSize: 10,
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFF4F4F4),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(8),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(8),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .error,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(8),
+                                                ),
+                                                focusedErrorBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .error,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              style: FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .override(
+                                                fontFamily: 'Readex Pro',
+                                                fontSize: 10,
+                                              ),
+                                              textAlign: TextAlign.end,
+                                              keyboardType: TextInputType.emailAddress,
+                                              cursorColor: const Color(0xFF333333),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.h),
+
+                                    ],
+                                  ),
+                                ]
+                                    .divide(SizedBox(height: 5.h))
+                                    .addToEnd(SizedBox(height: 10.h)),
+                              ),
+                            ],
+                          ),
+
                         Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -920,30 +1047,50 @@ class EditUsers extends StatelessWidget {
 
                                   ],
                                 ),
-                                SizedBox(height: 29.h),
+                                SizedBox(height: 15.h),
                                 InkWell(
                                   onTap: () async {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          //all text from here arabic
                                           title: const Text('تأكيد الحذف'),
                                           content: const Text('هل تريد حذف الحساب؟'),
                                           actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop(false); // Close the dialog and pass false
-                                              },                                          //all text from here arabic
-                                          //all text from here arabic
-                                              child: const Text('لا'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                Navigator.of(context).pop(true);
-                                                // Close the dialog and pass true
-                                              },
-                                              child: const Text('نعم'),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100.0,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop(false); // Close the dialog and pass false
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.white,
+                                                    ),
+                                                    child: const Text(
+                                                      'لا',
+                                                      style: TextStyle(color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 100.0,
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      Navigator.of(context).pop(true); // Close the dialog and pass true
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.red.shade800,
+                                                    ),
+                                                    child: const Text(
+                                                      'نعم',
+                                                      style: TextStyle(color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         );

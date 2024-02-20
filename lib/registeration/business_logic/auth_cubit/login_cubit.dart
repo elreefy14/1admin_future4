@@ -228,8 +228,6 @@ static LoginCubit get(context) => BlocProvider.of(context);
         password: password
     ).then((userCredential) async {
       var user = userCredential.user!;
-
-
       FirebaseMessaging.instance.getToken().then((token) {
         FirebaseFirestore.instance.collection('admins')
             .doc(user.uid)
@@ -263,35 +261,35 @@ static LoginCubit get(context) => BlocProvider.of(context);
       switch (error.code) {
         //network error
         case "network-request-failed":
-          if (kDebugMode) {
+         // if (kDebugMode) {
             errorMessage = //'Please check your internet connection';
             'الرجاء التحقق من اتصالك بالانترنت';
-          }
+        //  }
           break;
         case "invalid-email":
-          if (kDebugMode) {
+        //  if (kDebugMode) {
             //translate to arabic
             //errorMessage = 'The email address is badly formatted.';
             errorMessage = 'البريد الإلكتروني غير صالح';
-          }
+       //   }
           break;
         case "user-not-found":
-          if (kDebugMode) {
+        //  if (kDebugMode) {
            // errorMessage = 'No user found for that mobile number.';
             errorMessage = 'لا يوجد مستخدم بهذا الرقم';
-          }
+        //  }
           break;
         case "wrong-password":
-          if (kDebugMode) {
+        //  if (kDebugMode) {
           //  errorMessage = 'Wrong password provided for that user.';
             errorMessage = 'كلمة المرور غير صحيحة';
-          }
+       //   }
           break;
         default:
-          if (kDebugMode) {
+       //   if (kDebugMode) {
           // errorMessage = 'The error is $error';
             errorMessage = '$error حدث خطأ ما';
-          }
+     //     }
       }
       print('error firebase:\n\n\n\n\n\n\n');
       print(error.code);

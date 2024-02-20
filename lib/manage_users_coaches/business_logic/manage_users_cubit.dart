@@ -110,6 +110,8 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
   late TextEditingController salaryPerHourController;
   //numberOfSessionsController
   late TextEditingController numberOfSessionsController;
+  late TextEditingController passwordController;
+
   //init tab controller
   void initTabController() {
     tabController = TabController(length: 2, vsync: NavigatorState());
@@ -123,6 +125,10 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
     //numberOfSessionsController
     numberOfSessionsController =
         TextEditingController(text: userModel.numberOfSessions.toString() ?? '');
+    //passwordController
+    passwordController = TextEditingController(
+      text: userModel.password.toString() ?? '',
+    );
 
   }
   //make function that take phone number and add that phone to whatsapp group
@@ -413,7 +419,7 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
       required String lname,
       required String phone,
         String? hourlyRate,
-
+       // String? password,
       required uid, required String? numberOfSessions}) async {
     emit(UpdateUserInfoLoadingState());
   //  if (password.isEmpty) {
@@ -476,6 +482,7 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
 
       //userData!.name = firstName + ' ' + (lastName ?? '');
     }
+    //password
     if (fname != null && fname != '' && fname != 'null') {
       updateData['fname'] = fname;
       notificationData['message'] = 'تم تحديث معلومات الحساب الشخصية';

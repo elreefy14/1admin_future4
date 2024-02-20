@@ -403,7 +403,7 @@ class AddGroupCubit extends Cubit<AddGroupState> {
       'max_users': maxUsers,
       'number_of_users': selectedUsers.length,
       'number_of_coaches': selectedCoaches.length,
-
+     // 'start_time_hour': nonNullableDays[day]!['start'].toDate().hour,
       //add list of coaches and users to the branch
 
       'usersList': selectedUsers.map((e) => e.name).toList(),
@@ -461,6 +461,7 @@ class AddGroupCubit extends Cubit<AddGroupState> {
                 'date': day,
                 'nearest_day': nearestDayTimestamp,
                 'nearest_day_user': nearestDayTimestamp,
+                'start_time_hour': nonNullableDays[day]!['start'].toDate().hour,
                 'branch_id': branch,
                 'pId': FirebaseAuth.instance.currentUser!.uid,
                 'max_users': maxUsers,
@@ -510,6 +511,7 @@ class AddGroupCubit extends Cubit<AddGroupState> {
                   .doc(scheduleRef.id);
 
               batch.set(coachScheduleRef, {
+                'start_time_hour': nonNullableDays[day]!['start'].toDate().hour,
                 'start_time': nonNullableDays[day]!['start'],
                 'end_time': nonNullableDays[day]!['end'],
                 'date': day,
@@ -534,6 +536,7 @@ class AddGroupCubit extends Cubit<AddGroupState> {
                   .doc(scheduleRef.id);
 
               batch.set(userRef, {
+                'start_time_hour': nonNullableDays[day]!['start'].toDate().hour,
                 'start_time': nonNullableDays[day]!['start'],
                 'end_time': nonNullableDays[day]!['end'],
                 'date': day,
@@ -576,6 +579,8 @@ class AddGroupCubit extends Cubit<AddGroupState> {
                   .doc(scheduleRef.id);
 
               batch.set(userScheduleRef, {
+                'start_time_hour': nonNullableDays[day]!['start'].toDate().hour,
+
                 'start_time': nonNullableDays[day]!['start'],
                 'end_time': nonNullableDays[day]!['end'],
                 'date': day,
