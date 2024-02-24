@@ -80,6 +80,7 @@ class AddGroupCubit extends Cubit<AddGroupState> {
     selectedUsersUids = [];
     maxUsers = null;
     // maxUsers = null;
+    // maxUsers = null;
     _times['السبت'] = {'start': null, 'end': null};
     _times['الأحد'] = {'start': null, 'end': null};
     _times['الاثنين'] = {'start': null, 'end': null};
