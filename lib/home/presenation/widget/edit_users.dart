@@ -418,14 +418,14 @@ class EditUsers extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       IconButton(
-                                        icon: Icon(Icons.copy),
+                                        icon: const Icon(Icons.copy),
                                         onPressed: () {
                                           Clipboard.setData(ClipboardData(
                                             text: ManageUsersCubit.get(context).passwordController.text,
                                           ));
                                           //show snackbar to inform user that password copied to clipboard
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text('تم نسخ كلمة المرور'),
                                               duration: Duration(seconds: 3),
                                             ),

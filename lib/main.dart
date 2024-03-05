@@ -19,29 +19,28 @@ import 'core/bloc_observer.dart';
 import 'core/constants/routes_manager.dart';
 
 //todo: if phone is huwawi call that function
-@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    await Firebase.initializeApp(
-    );
-    FirebaseFirestore.instance.settings =
-    const Settings(
-      persistenceEnabled: true,
-      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-    );
-    //use android sett up to make the app work in the background
-    FirebaseFirestore.instance.enableNetwork();
-    // FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
-    // FirebaseFirestore.instance.collection('dummy').doc('dummy4').set({'count': 1});
-   // FirebaseFirestore.instance.collection('dummy').doc('dummy4').update({'count': FieldValue.increment(1)});
-    if (kDebugMode) {
-      print("work manager mbroooooooook Native called background task: \n\n\n\n\n\n\n"
-        "work manager "
-    );
-    } //simpleTsk will be emitted here.
-    return Future.value(true);
-  });
-}
+// @pragma(
+// 'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+// void callbackDispatcher() {
+// Workmanager().executeTask((task, inputData) async {
+//   await Firebase.initializeApp();
+//   FirebaseFirestore.instance.settings = const Settings(
+//     persistenceEnabled: true,
+//     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+//  );
+//use android sett up to make the app work in the background
+// FirebaseFirestore.instance.enableNetwork();
+// FirebaseFirestore.instance.collection('dummy').doc('dummy').update({'dummy': 'manager'});
+// FirebaseFirestore.instance.collection('dummy').doc('dummy4').set({'count': 1});
+// FirebaseFirestore.instance.collection('dummy').doc('dummy4').update({'count': FieldValue.increment(1)});
+// if (kDebugMode) {
+//  print(
+//       "work manager mbroooooooook Native called background task: \n\n\n\n\n\n\n"
+//      "work manager ");
+//   } //simpleTsk will be emitted here.
+//    return Future.value(true);
+//  });
+//}
 // @pragma('vm:entry-point')
 // void backgroundFetchHeadlessTask(HeadlessTask task) async {
 //   final taskId = task.taskId;
@@ -87,46 +86,45 @@ Future<void> main() async {
   // await CacheHelper.init();
   //
   await Firebase.initializeApp();
-  FirebaseFirestore.instance.settings =
-  const Settings(
+  FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
   //use android sett up to make the app work in the background
   FirebaseFirestore.instance.enableNetwork();
- // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
- //  BackgroundFetch.scheduleTask(
- //    TaskConfig
- //      (
- //      taskId: "com.transistorsoft.customtask",
- //      delay: 30000,
- //      periodic: true,
- //      forceAlarmManager: true,
- //      stopOnTerminate: false,
- //      enableHeadless: true,
- //      startOnBoot: true,
- //    ),
- //  );
- //  BackgroundFetch.configure(
- //    BackgroundFetchConfig(
- //      minimumFetchInterval: 1, // Set the interval for the task in minutes
- //      stopOnTerminate: false, // Continue running the task even if the app is closed
- //      enableHeadless: true, // Enable handling of tasks in the background isolate
- //      requiresBatteryNotLow: false, // Allow running the task even if the battery is low
- //      requiresCharging: false,
- //      forceAlarmManager: true,
- //      //give all permissions to the app
- //      startOnBoot: true, // Run the task once the device is powered on
- //    ),    (String taskId) async {
- //    // This callback is called when the app is in the background and a task is triggered.
- //    await Firebase.initializeApp(
- //    );
- //    FirebaseFirestore.instance.settings =
- //    const Settings(
- //      persistenceEnabled: true,
- //      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
- //    );
-    //use android sett up to make the app work in the background
+  // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  //  BackgroundFetch.scheduleTask(
+  //    TaskConfig
+  //      (
+  //      taskId: "com.transistorsoft.customtask",
+  //      delay: 30000,
+  //      periodic: true,
+  //      forceAlarmManager: true,
+  //      stopOnTerminate: false,
+  //      enableHeadless: true,
+  //      startOnBoot: true,
+  //    ),
+  //  );
+  //  BackgroundFetch.configure(
+  //    BackgroundFetchConfig(
+  //      minimumFetchInterval: 1, // Set the interval for the task in minutes
+  //      stopOnTerminate: false, // Continue running the task even if the app is closed
+  //      enableHeadless: true, // Enable handling of tasks in the background isolate
+  //      requiresBatteryNotLow: false, // Allow running the task even if the battery is low
+  //      requiresCharging: false,
+  //      forceAlarmManager: true,
+  //      //give all permissions to the app
+  //      startOnBoot: true, // Run the task once the device is powered on
+  //    ),    (String taskId) async {
+  //    // This callback is called when the app is in the background and a task is triggered.
+  //    await Firebase.initializeApp(
+  //    );
+  //    FirebaseFirestore.instance.settings =
+  //    const Settings(
+  //      persistenceEnabled: true,
+  //      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  //    );
+  //use android sett up to make the app work in the background
   //   FirebaseFirestore.instance.enableNetwork();
   //   //FirebaseFirestore.instance.collection('dummy').doc('dummy3').set({'fetch': 1});
   //   FirebaseFirestore.instance.collection('dummy').doc('dummy3').update({'fetch': FieldValue.increment(1)});
@@ -148,11 +146,10 @@ Future<void> main() async {
   // );
 //  await AndroidAlarmManager.initialize();
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: kDebugMode,
-  );
-
+  // Workmanager().initialize(
+  //   callbackDispatcher,
+  //   isInDebugMode: kDebugMode,
+//  );
 
   if (FirebaseAuth.instance.currentUser == null) {
     mainRoute = AppRoutes.login;
@@ -194,7 +191,6 @@ Future<void> main() async {
   // );
   //
 
-
   BlocOverrides.runZoned(() => runApp(const MyApp()),
       blocObserver: MyBlocObserver());
   // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
@@ -234,38 +230,40 @@ Future<void> main() async {
 //     networkType: NetworkType.connected,
 //       ),
 //   );
-  Workmanager().registerOneOffTask(
-//call dummy function to make the app work in the background
-    'o',
-    'one',
-    //8 hours
-    //frequency: const Duration(seconds: 30),
-    //25 seconds
-    initialDelay: const Duration(seconds:30),
-    constraints: Constraints(
-    networkType: NetworkType.not_required,
-    requiresBatteryNotLow: true,
-     ),
-  );
-  Workmanager().registerPeriodicTask(
-//call dummy function to make the app work in the background
-    'p',
-    'periodic',
-    //8 hours
-    //frequency: const Duration(seconds: 30),
-    //25 seconds
-    //frequency: const Duration(seconds:30),
-    frequency: const Duration(minutes:300),
-    initialDelay: //zero,
-    const Duration(seconds: 0),
-    backoffPolicy: BackoffPolicy.linear,
-    // existingWorkPolicy: ExistingWorkPolicy.replace,
-    tag: 'tag',
-    constraints: Constraints(
-    networkType: NetworkType.not_required,
-    requiresBatteryNotLow: true,
-     ),
-  );
+
+//   Workmanager().registerOneOffTask(
+// //call dummy function to make the app work in the background
+//     'o',
+//     'one',
+//     //8 hours
+//     //frequency: const Duration(seconds: 30),
+//     //25 seconds
+//     initialDelay: const Duration(seconds: 30),
+//     constraints: Constraints(
+//       networkType: NetworkType.not_required,
+//       requiresBatteryNotLow: true,
+//     ),
+//   );
+//   Workmanager().registerPeriodicTask(
+// //call dummy function to make the app work in the background
+//     'p',
+//     'periodic',
+//     //8 hours
+//     //frequency: const Duration(seconds: 30),
+//     //25 seconds
+//     //frequency: const Duration(seconds:30),
+//     frequency: const Duration(minutes: 300),
+//     initialDelay: //zero,
+//         const Duration(seconds: 0),
+//     backoffPolicy: BackoffPolicy.linear,
+//     // existingWorkPolicy: ExistingWorkPolicy.replace,
+//     tag: 'tag',
+//     constraints: Constraints(
+//       networkType: NetworkType.not_required,
+//       requiresBatteryNotLow: true,
+//     ),
+//   );
+
 //   Workmanager().registerPeriodicTask(
 // //call dummy function to make the app work in the background
 //     '10',
@@ -287,9 +285,7 @@ Future<void> main() async {
 //     //networkType: NetworkType.connected,
 //     //  ),
 //   );
-
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -299,17 +295,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AddGroupCubit(
-        ),
+        BlocProvider(
+          create: (context) => AddGroupCubit(),
           //  lazy: false,
         ),
         //   BlocProvider(create: (context) => SignUpCubit()
         //     ..getBranches()
         //   ),
         BlocProvider(create: (context) => ManageUsersCubit()
-          //    ,lazy: false
-        ),
-        BlocProvider(create: (context) => ManageAttendenceCubit(),
+            //    ,lazy: false
+            ),
+        BlocProvider(
+          create: (context) => ManageAttendenceCubit(),
 
           // lazy: false,
           //    ..addToWhatsAppGroup('https://chat.whatsapp.com/FV27zAcLJocKycZDScif1S', '+2001020684123 ')
@@ -324,60 +321,55 @@ class MyApp extends StatelessWidget {
         // //         password: '123456',
         // //         role: 'admin',
         //   //    ,lazy: false
-    //     // ),
-    //       ..createUser(uId: 'first',
-    // fname: 'mariam',
-    // lname: 'mohamed',
-    // phone: '01114478816',
-    // password: '123456',
-    // role: 'admin',
-    //     ),
-    //    ),
-      ],child:  ScreenUtilInit(
-      designSize: const Size(390, 845),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) =>
-          MaterialApp(
-            // localizationsDelegates: [
-            //   GlobalMaterialLocalizations.delegate,
-            //   GlobalWidgetsLocalizations.delegate,
-            //   GlobalCupertinoLocalizations.delegate,
-            // ],
-            // supportedLocales: const [
-            //   Locale('ar', "AE"),
-            // ],
-            builder: BotToastInit(),
-            navigatorObservers: [BotToastNavigatorObserver()],
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              timePickerTheme: const TimePickerThemeData(
-                elevation: 10,
-                entryModeIconColor: Colors.black,
-                hourMinuteShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                backgroundColor: Colors.white,
+        //     // ),
+        //       ..createUser(uId: 'first',
+        // fname: 'mariam',
+        // lname: 'mohamed',
+        // phone: '01114478816',
+        // password: '123456',
+        // role: 'admin',
+        //     ),
+        //    ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(390, 845),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => MaterialApp(
+          // localizationsDelegates: [
+          //   GlobalMaterialLocalizations.delegate,
+          //   GlobalWidgetsLocalizations.delegate,
+          //   GlobalCupertinoLocalizations.delegate,
+          // ],
+          // supportedLocales: const [
+          //   Locale('ar', "AE"),
+          // ],
+          builder: BotToastInit(),
+          navigatorObservers: [BotToastNavigatorObserver()],
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            timePickerTheme: const TimePickerThemeData(
+              elevation: 10,
+              entryModeIconColor: Colors.black,
+              hourMinuteShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              textSelectionTheme: const TextSelectionThemeData(
-                cursorColor: Colors.blue,
-                selectionColor: Colors.blue,
-                selectionHandleColor: Colors.blue,
-              ),
-              primarySwatch: //use this as material color #4F46E5
-              Colors.blue,
-              //MyColors.primaryColor,
+              backgroundColor: Colors.white,
             ),
-            initialRoute:
-            mainRoute,
-            //AppRoutes.manageGroups,
-            onGenerateRoute: RouteGenerator.generateRoute,
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Colors.blue,
+              selectionColor: Colors.blue,
+              selectionHandleColor: Colors.blue,
+            ),
+            primarySwatch: //use this as material color #4F46E5
+                Colors.blue,
+            //MyColors.primaryColor,
           ),
-
-    ),
+          initialRoute: mainRoute,
+          //AppRoutes.manageGroups,
+          onGenerateRoute: RouteGenerator.generateRoute,
+        ),
+      ),
     );
   }
 }
-
-
-

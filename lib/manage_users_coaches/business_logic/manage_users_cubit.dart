@@ -678,48 +678,88 @@ class ManageUsersCubit extends Cubit<ManageUsersState> {
   //   ));
   // }
 
-
-   deleteUser({required String uid}) {
+  //delete subcollection called notifications and subcollection called notifications for each user
+  //and collection user all that in one batch commit
+  deleteUser({required String uid}) {
     emit(DeleteUserLoadingState());
 
-    // Delete the user document
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .delete()
-        .then((value) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      // Delete the user's subcollection "schedules"
-      CollectionReference schedulesCollection =
-      FirebaseFirestore.instance.collection('users').doc(uid).collection('schedules');
-      schedulesCollection.get().then((schedulesSnapshot) {
-        WriteBatch batch = FirebaseFirestore.instance.batch();
-        schedulesSnapshot.docs.forEach((doc) {
+    // Get a reference to the user document
+    DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+
+    // Schedule the user document for deletion
+    batch.delete(userRef);
+
+    // Delete the user's subcollection "schedules"
+    CollectionReference schedulesCollection =
+    FirebaseFirestore.instance.collection('users').doc(uid).collection('schedules');
+    schedulesCollection.get().then((schedulesSnapshot) {
+      schedulesSnapshot.docs.forEach((doc) {
+        batch.delete(doc.reference);
+      });
+
+      // Delete the user's subcollection "notifications"
+      CollectionReference notificationsCollection =
+      FirebaseFirestore.instance.collection('users').doc(uid).collection('notifications');
+      notificationsCollection.get().then((notificationsSnapshot) {
+        notificationsSnapshot.docs.forEach((doc) {
           batch.delete(doc.reference);
         });
-        batch.commit().then((_) {
+
+        batch.commit();
           // Show toast message
           showToast(
             state: ToastStates.SUCCESS,
             msg: 'تم حذف المستخدم والجداول الفرعية',
           );
           emit(DeleteUserSuccessState());
-        }).catchError((error) {
-          showToast(
-            msg: 'فشل حذف الجداول الفرعية',
-            state: ToastStates.ERROR,
-          );
-          emit(DeleteUserErrorState(error.toString()));
-        });
+
       });
-    }).catchError((error) {
-      showToast(
-        msg: 'فشل حذف المستخدم',
-        state: ToastStates.ERROR,
-      );
-      emit(DeleteUserErrorState(error.toString()));
     });
   }
+  //  deleteUser({required String uid}) {
+  //   emit(DeleteUserLoadingState());
+  //
+  //   // Delete the user document
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uid)
+  //       .delete()
+  //       .then((value) {
+  //
+  //     // Delete the user's subcollection "schedules"
+  //     CollectionReference schedulesCollection =
+  //     FirebaseFirestore.instance.collection('users').doc(uid).collection('schedules');
+  //     schedulesCollection.get().then((schedulesSnapshot) {
+  //       WriteBatch batch = FirebaseFirestore.instance.batch();
+  //       schedulesSnapshot.docs.forEach((doc) {
+  //         batch.delete(doc.reference);
+  //       });
+  //
+  //       batch.commit().then((_) {
+  //         // Show toast message
+  //         showToast(
+  //           state: ToastStates.SUCCESS,
+  //           msg: 'تم حذف المستخدم والجداول الفرعية',
+  //         );
+  //         emit(DeleteUserSuccessState());
+  //       }).catchError((error) {
+  //         showToast(
+  //           msg: 'فشل حذف الجداول الفرعية',
+  //           state: ToastStates.ERROR,
+  //         );
+  //         emit(DeleteUserErrorState(error.toString()));
+  //       });
+  //     });
+  //   }).catchError((error) {
+  //     showToast(
+  //       msg: 'فشل حذف المستخدم',
+  //       state: ToastStates.ERROR,
+  //     );
+  //     emit(DeleteUserErrorState(error.toString()));
+  //   });
+  // }
 
   //    bool isConnected = await checkInternetConnectivity();
 //edit this function to enable it when internet is not available
